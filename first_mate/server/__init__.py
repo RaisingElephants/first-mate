@@ -23,7 +23,7 @@ def root():
             p.link(href="/static/root.css", rel="stylesheet"),
         ),
         p.body(
-            p.h1("First-mate"),
+            p.h1("First Mate"),
             p.p("Hello, world!")
         )
     ))
@@ -39,5 +39,5 @@ def serve_static(filename):
 
     AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     """
-    file_path = os.path.join(os.getcwd(), "first-mate", "static", filename)
+    file_path = os.path.join(os.getcwd(), "first_mate", "static", filename)
     return send_file(file_path)
