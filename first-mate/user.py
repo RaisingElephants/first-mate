@@ -26,3 +26,6 @@ class User(TypedDict):
 
     degrees: list[str]
     """List of degrees that the user is studying"""
+
+
+def register_user

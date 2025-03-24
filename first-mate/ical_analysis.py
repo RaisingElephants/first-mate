@@ -8,7 +8,7 @@ Analyse an iCal file given its URL.
 from pathlib import Path
 
 
-async def download_ical(url: str) -> Path:
+def download_ical(url: str) -> Path:
     """
     Download the given ical file and return its location.
 
