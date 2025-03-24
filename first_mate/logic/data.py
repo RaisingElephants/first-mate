@@ -17,13 +17,27 @@ DATASTORE_FILE = "data.json"
 __data_cache : Data | None = None
 """Cache for data, to prevent loading it from disk every time"""
 
+
+def default_data() -> Data:
+    """Return the default data"""
+    return {
+        "users": [],
+    }
+
+
 def get_data() -> Data:
     """Load data store from JSON file"""
     global __data_cache
     if __data_cache:
         return __data_cache
-    with open(DATASTORE_FILE, "r") as f:
-        __data_cache = cast(Data, json.load(f))
+    try:
+        with open(DATASTORE_FILE, "r") as f:
+            __data_cache = cast(Data, json.load(f))
+            return __data_cache
+    except FileNotFoundError:
+        print("Data file not found, starting from empty")
+        __data_cache = default_data()
+        save_data()
         return __data_cache
 
 
