@@ -50,6 +50,7 @@ def error_page(
     title: str,
     heading: str,
     text: str,
+    logged_in: bool,
 ) -> p.html:
     return p.html(
         p.head(
@@ -57,9 +58,10 @@ def error_page(
             p.link(href="/static/root.css", rel="stylesheet"),
         ),
         p.body(
+            navbar(logged_in),
             p.div(id="error-page")(
                 p.h1(heading),
                 p.p(text),
-            )
+            ),
         ),
     )

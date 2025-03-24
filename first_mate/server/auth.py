@@ -16,7 +16,7 @@ from first_mate.server.session import (
 
 from .util import error_page, list_to_checkboxes, navbar
 from ..consts import DEGREES_LIST
-from first_mate.logic.user import logout_user, register_user
+from first_mate.logic.user import login_user, logout_user, register_user
 
 
 auth = Blueprint("/auth", __name__)
@@ -110,6 +110,7 @@ def register_submit():
                 "Register - Error",
                 "Unable to register",
                 "Perhaps the account already exists?",
+                False,
             )
         )
 
@@ -160,6 +161,29 @@ def login():
             ),
         )
     )
+
+
+@auth.post("/login")
+def login_submit():
+    if is_user_logged_in():
+        return redirect("/")
+    zid = request.form["zid"]
+    password = request.form["password"]
+
+    session_id = login_user(zid, password)
+    if session_id is None:
+        return str(
+            error_page(
+                "Register - Error",
+                "Unable to log in",
+                "zID or password is incorrect",
+                False,
+            )
+        )
+
+    set_session(session_id)
+
+    return redirect("/")
 
 
 @auth.route("/logout", methods=["GET", "POST"])
