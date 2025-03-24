@@ -3,6 +3,7 @@ server/util.py
 
 Utility code
 """
+
 import pyhtml as p
 
 
@@ -24,3 +25,22 @@ def list_to_checkboxes(
     ]
 
     return p.div(html_values)
+
+
+def error_page(
+    title: str,
+    heading: str,
+    text: str,
+) -> p.html:
+    return p.html(
+        p.head(
+            p.title(title),
+            p.link(href="/static/root.css", rel="stylesheet"),
+        ),
+        p.body(
+            p.div(id="error-page")(
+                p.h1(heading),
+                p.p(text),
+            )
+        )
+    )

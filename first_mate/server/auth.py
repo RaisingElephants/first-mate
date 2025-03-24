@@ -5,10 +5,12 @@ Server code for authentication.
 """
 
 import pyhtml as p
-from flask import Blueprint
+from flask import Blueprint, request
 
 from .util import list_to_checkboxes
 from ..consts import DEGREES_LIST
+
+
 
 
 auth = Blueprint("/auth", __name__)
@@ -76,6 +78,17 @@ def register_page():
             ),
         )
     )
+
+
+# @auth.post("/register")
+# def register_submit():
+#     zid = request.form["zid"]
+#     name = request.form["name"]
+#     password = request.form["password"]
+#     ical = request.form["ical"]
+#     degrees = request.form.getlist("degrees")
+#
+#     register
 
 
 @auth.get("/login")
