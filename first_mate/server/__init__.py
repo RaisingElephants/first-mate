@@ -16,6 +16,9 @@ from .auth import auth
 app = Flask(__name__)
 
 
+# FIXME: Load from .env
+app.secret_key = "top secret key"
+
 app.register_blueprint(auth, url_prefix="/auth")
 
 
