@@ -1,0 +1,15 @@
+[project]
+name = "first-mate"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "flask>=3.1.0",
+    "pyhtml-enhanced>=2.2.2",
+]
+
+[dependency-groups]
+dev = [
+    "basedpyright>=1.28.3",
+]
