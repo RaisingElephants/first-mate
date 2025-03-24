@@ -7,7 +7,12 @@ Server code for authentication.
 import pyhtml as p
 from flask import Blueprint, redirect, request
 
-from first_mate.server.session import clear_session, get_session, is_user_logged_in, set_session
+from first_mate.server.session import (
+    clear_session,
+    get_session,
+    is_user_logged_in,
+    set_session,
+)
 
 from .util import error_page, list_to_checkboxes, navbar
 from ..consts import DEGREES_LIST
@@ -38,6 +43,7 @@ def register_page():
                                 name="zid",
                                 id="zid",
                                 placeholder="z1234567",
+                                value="z1234567",
                                 required=True,
                             ),
                         ),
@@ -47,6 +53,7 @@ def register_page():
                                 name="name",
                                 id="name",
                                 placeholder="Robin Banks",
+                                value="Robin Banks",
                                 required=True,
                             ),
                         ),
@@ -57,6 +64,7 @@ def register_page():
                                 name="password",
                                 id="password",
                                 placeholder="********",
+                                value="abc123ABC",
                                 required=True,
                             ),
                         ),
@@ -67,6 +75,7 @@ def register_page():
                                 name="ical",
                                 id="ical",
                                 placeholder="webcal://my.unsw.edu.au/cal/pttd/ABCDEFGHIJ.ics",
+                                value="webcal://my.unsw.edu.au/cal/pttd/ABCDEFGHIJ.ics",
                                 required=True,
                             ),
                         ),
@@ -126,7 +135,12 @@ def login():
                     p.form(
                         p.p(
                             p.label(for_="zid")("Your zID"),
-                            p.input(name="zid", id="zid", placeholder="z1234567"),
+                            p.input(
+                                name="zid",
+                                id="zid",
+                                placeholder="z1234567",
+                                value="z1234567",
+                            ),
                         ),
                         p.p(
                             p.label(for_="password")("Your password"),
@@ -135,6 +149,7 @@ def login():
                                 name="password",
                                 id="password",
                                 placeholder="********",
+                                value="abc123ABC",
                             ),
                         ),
                         p.p(
