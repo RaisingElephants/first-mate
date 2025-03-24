@@ -27,10 +27,30 @@ def list_to_checkboxes(
     return p.div(html_values)
 
 
+def navbar(logged_in: bool) -> p.nav:
+    if logged_in:
+        auth_options = [p.a(href="/auth/logout")(p.h2("Log out"))]
+    else:
+        auth_options = [
+            p.a(href="/auth/register")(p.h2("Register")),
+            p.a(href="/auth/login")(p.h2("Log in")),
+        ]
+
+    # TODO: Make this only enabled in debug mode
+    debug_options = [
+        p.form(action="debug/clear")(
+            p.input(type="submit", value="Reset server"),
+        )
+    ]
+
+    return p.nav(p.a(href="/")(p.h1("First Mate")), auth_options, debug_options)
+
+
 def error_page(
     title: str,
     heading: str,
     text: str,
+    logged_in: bool,
 ) -> p.html:
     return p.html(
         p.head(
@@ -38,9 +58,10 @@ def error_page(
             p.link(href="/static/root.css", rel="stylesheet"),
         ),
         p.body(
+            navbar(logged_in),
             p.div(id="error-page")(
                 p.h1(heading),
                 p.p(text),
-            )
-        )
+            ),
+        ),
     )
