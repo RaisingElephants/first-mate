@@ -1,14 +1,16 @@
 """
 Data store
 """
+from __future__ import annotations
 import json
-from typing import TypedDict, cast
+from typing import TYPE_CHECKING, TypedDict, cast
 
-from .user import User
+if TYPE_CHECKING:
+    from .user import User
 
 
 class Data(TypedDict):
-    users: list[User]
+    users: list['User']
 
 
 DATASTORE_FILE = "data.json"

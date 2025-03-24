@@ -27,6 +27,18 @@ def list_to_checkboxes(
     return p.div(html_values)
 
 
+def navbar(logged_in: bool) -> p.nav:
+    if logged_in:
+        auth_options = [p.a(href="/auth/logout")(p.h2("Log out"))]
+    else:
+        auth_options = [
+            p.a(href="/auth/register")(p.h2("Register")),
+            p.a(href="/auth/login")(p.h2("Log in")),
+        ]
+
+    return p.nav(p.a(href="/")(p.h1("First Mate")), auth_options)
+
+
 def error_page(
     title: str,
     heading: str,
@@ -42,5 +54,5 @@ def error_page(
                 p.h1(heading),
                 p.p(text),
             )
-        )
+        ),
     )

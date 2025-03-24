@@ -7,7 +7,9 @@ Server code for authentication.
 import pyhtml as p
 from flask import Blueprint, redirect, request, session
 
-from .util import error_page, list_to_checkboxes
+from first_mate.server.session import is_user_logged_in
+
+from .util import error_page, list_to_checkboxes, navbar
 from ..consts import DEGREES_LIST
 from first_mate.logic.user import register_user
 
@@ -17,6 +19,8 @@ auth = Blueprint("/auth", __name__)
 
 @auth.get("/register")
 def register_page():
+    if is_user_logged_in():
+        return redirect("/")
     return str(
         p.html(
             p.head(
@@ -24,6 +28,7 @@ def register_page():
                 p.link(href="/static/root.css", rel="stylesheet"),
             ),
             p.body(
+                navbar(False),
                 p.h1("Login - First Mate"),
                 p.div(id="login-box")(
                     p.form(
@@ -89,11 +94,13 @@ def register_submit():
 
     session_id = register_user(zid, name, password, ical, degrees)
     if session_id is None:
-        return str(error_page(
-            "Register - Error",
-            "Unable to register",
-            "Perhaps the account already exists?",
-        ))
+        return str(
+            error_page(
+                "Register - Error",
+                "Unable to register",
+                "Perhaps the account already exists?",
+            )
+        )
 
     session["session_id"] = session_id
 
@@ -102,6 +109,8 @@ def register_submit():
 
 @auth.get("/login")
 def login():
+    if is_user_logged_in():
+        return redirect("/")
     return str(
         p.html(
             p.head(
@@ -109,6 +118,7 @@ def login():
                 p.link(href="/static/root.css", rel="stylesheet"),
             ),
             p.body(
+                navbar(False),
                 p.h1("Login - First Mate"),
                 p.div(id="login-box")(
                     p.form(
