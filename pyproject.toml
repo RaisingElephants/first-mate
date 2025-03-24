@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "flask>=3.1.0",
+    "icalendar>=6.1.2",
     "pyhtml-enhanced>=2.2.2",
 ]
 
