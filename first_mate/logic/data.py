@@ -51,7 +51,7 @@ def save_data():
     """
     with open(DATASTORE_FILE, "w") as f:
         assert __data_cache is not None
-        json.dump(__data_cache, f)
+        json.dump(__data_cache, f, indent=2)
 
 
 def clear_data():
