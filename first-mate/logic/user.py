@@ -87,7 +87,7 @@ def register_user(
     password: str,
     ical_url: str,
     degrees: list[str],
-) -> int:
+) -> int | None:
     """
     Register a user, storing their password, and generating a session_id
 
@@ -107,8 +107,13 @@ def register_user(
     Returns
     -------
     int
-        session ID
+        session ID if user registered successfully, else None to indicate user
+        already exists
     """
+    user_with_zid = get_user_by_zid(zid)
+    if user_with_zid:
+        return login_user(zid, password)
+
     # Hash and salt password
     salt = str(uuid4())
     hashed = hashlib.sha256(f"{salt}{password}".encode()).digest().decode()
