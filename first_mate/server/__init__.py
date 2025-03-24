@@ -35,7 +35,7 @@ def root():
             ),
             p.body(
                 navbar(logged_in),
-                p.h1("First-mate"),
+                p.h1("First Mate"),
                 p.p("Hello, world!"),
             ),
         )

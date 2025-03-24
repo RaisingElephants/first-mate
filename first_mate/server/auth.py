@@ -29,12 +29,12 @@ def register_page():
     return str(
         p.html(
             p.head(
-                p.title("Login - First Mate"),
+                p.title("Register - First Mate"),
                 p.link(href="/static/root.css", rel="stylesheet"),
             ),
             p.body(
                 navbar(False),
-                p.h1("Login - First Mate"),
+                p.h1("Registration"),
                 p.div(id="login-box")(
                     p.form(
                         p.p(
@@ -131,7 +131,7 @@ def login():
             ),
             p.body(
                 navbar(False),
-                p.h1("Login - First Mate"),
+                p.h1("Login"),
                 p.div(id="login-box")(
                     p.form(
                         p.p(

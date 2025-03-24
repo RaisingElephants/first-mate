@@ -1,7 +1,42 @@
 body {
     margin: 0;
-    background-color: yellow;
-    color: red;
+    background-color: #0d1b2a;
+    color: white;
+    font-family: Arial;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2em;
+    margin: 0;
+    padding: 10px;
+}
+
+form {
+    background-color: #162030;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin-left:auto;
+    margin-right:auto;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+input {
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+}
+
+label{
+    float:left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
 }
 
 
