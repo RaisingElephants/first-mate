@@ -7,11 +7,11 @@ Server code for authentication.
 import pyhtml as p
 from flask import Blueprint, redirect, request, session
 
-from first_mate.server.session import is_user_logged_in
+from first_mate.server.session import clear_session, get_session, is_user_logged_in
 
 from .util import error_page, list_to_checkboxes, navbar
 from ..consts import DEGREES_LIST
-from first_mate.logic.user import register_user
+from first_mate.logic.user import logout_user, register_user
 
 
 auth = Blueprint("/auth", __name__)
@@ -143,3 +143,13 @@ def login():
             ),
         )
     )
+
+
+@auth.route("/logout", methods=["GET", "POST"])
+def logout():
+    session = get_session()
+    if session is None:
+        return redirect("/")
+    logout_user(session)
+    clear_session()
+    return redirect("/")

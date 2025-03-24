@@ -18,3 +18,16 @@ def is_user_logged_in() -> bool:
         return False
     else:
         return True
+
+
+def get_session() -> int | None:
+    return session.get("session_id")
+
+
+def set_session(session_id: int) -> None:
+    session["session_id"] = session_id
+    session.modified = True
+
+
+def clear_session():
+    session.pop("session_id")
