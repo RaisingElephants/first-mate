@@ -17,7 +17,7 @@ DATASTORE_FILE = "data.json"
 __data_cache : Data | None = None
 """Cache for data, to prevent loading it from disk every time"""
 
-def get_data():
+def get_data() -> Data:
     """Load data store from JSON file"""
     global __data_cache
     if __data_cache:
@@ -28,6 +28,10 @@ def get_data():
 
 
 def save_data():
+    """
+    Save data to JSON file. Data is accessed from reference returned by
+    get_data
+    """
     with open(DATASTORE_FILE, "w") as f:
         assert __data_cache is not None
         json.dump(__data_cache, f)
