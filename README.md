@@ -21,5 +21,5 @@ uv run basedpyright
 ## Run the app
 
 ```sh
-uv run first-mate
+uv run -m first-mate
 ```
