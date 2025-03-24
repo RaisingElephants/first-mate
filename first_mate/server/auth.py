@@ -5,12 +5,11 @@ Server code for authentication.
 """
 
 import pyhtml as p
-from flask import Blueprint, request
+from flask import Blueprint, redirect, request, session
 
-from .util import list_to_checkboxes
+from .util import error_page, list_to_checkboxes
 from ..consts import DEGREES_LIST
-
-
+from first_mate.logic.user import register_user
 
 
 auth = Blueprint("/auth", __name__)
@@ -80,15 +79,25 @@ def register_page():
     )
 
 
-# @auth.post("/register")
-# def register_submit():
-#     zid = request.form["zid"]
-#     name = request.form["name"]
-#     password = request.form["password"]
-#     ical = request.form["ical"]
-#     degrees = request.form.getlist("degrees")
-#
-#     register
+@auth.post("/register")
+def register_submit():
+    zid = request.form["zid"]
+    name = request.form["name"]
+    password = request.form["password"]
+    ical = request.form["ical"]
+    degrees = request.form.getlist("degrees")
+
+    session_id = register_user(zid, name, password, ical, degrees)
+    if session_id is None:
+        return str(error_page(
+            "Register - Error",
+            "Unable to register",
+            "Perhaps the account already exists?",
+        ))
+
+    session["session_id"] = session_id
+
+    return redirect("/")
 
 
 @auth.get("/login")
