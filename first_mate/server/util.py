@@ -36,7 +36,14 @@ def navbar(logged_in: bool) -> p.nav:
             p.a(href="/auth/login")(p.h2("Log in")),
         ]
 
-    return p.nav(p.a(href="/")(p.h1("First Mate")), auth_options)
+    # TODO: Make this only enabled in debug mode
+    debug_options = [
+        p.form(action="debug/clear")(
+            p.input(type="submit", value="Reset server"),
+        )
+    ]
+
+    return p.nav(p.a(href="/")(p.h1("First Mate")), auth_options, debug_options)
 
 
 def error_page(

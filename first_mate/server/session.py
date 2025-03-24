@@ -30,4 +30,7 @@ def set_session(session_id: int) -> None:
 
 
 def clear_session():
-    session.pop("session_id")
+    try:
+        del session["session_id"]
+    except KeyError:
+        pass

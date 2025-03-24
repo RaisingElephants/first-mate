@@ -1,6 +1,7 @@
 """
 Data store
 """
+
 from __future__ import annotations
 import json
 from typing import TYPE_CHECKING, TypedDict, cast
@@ -10,13 +11,13 @@ if TYPE_CHECKING:
 
 
 class Data(TypedDict):
-    users: list['User']
+    users: list["User"]
 
 
 DATASTORE_FILE = "data.json"
 
 
-__data_cache : Data | None = None
+__data_cache: Data | None = None
 """Cache for data, to prevent loading it from disk every time"""
 
 
@@ -51,3 +52,10 @@ def save_data():
     with open(DATASTORE_FILE, "w") as f:
         assert __data_cache is not None
         json.dump(__data_cache, f)
+
+
+def clear_data():
+    """Clear all data"""
+    global __data_cache
+    __data_cache = default_data()
+    save_data()

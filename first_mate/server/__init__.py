@@ -11,6 +11,7 @@ from flask import Flask, send_file
 from .session import is_user_logged_in
 from .util import navbar
 from .auth import auth
+from .debug import debug
 
 
 app = Flask(__name__)
@@ -20,6 +21,7 @@ app = Flask(__name__)
 app.secret_key = "top secret key"
 
 app.register_blueprint(auth, url_prefix="/auth")
+app.register_blueprint(debug, url_prefix="/debug")
 
 
 @app.get("/")

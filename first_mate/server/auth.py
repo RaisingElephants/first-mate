@@ -5,9 +5,9 @@ Server code for authentication.
 """
 
 import pyhtml as p
-from flask import Blueprint, redirect, request, session
+from flask import Blueprint, redirect, request
 
-from first_mate.server.session import clear_session, get_session, is_user_logged_in
+from first_mate.server.session import clear_session, get_session, is_user_logged_in, set_session
 
 from .util import error_page, list_to_checkboxes, navbar
 from ..consts import DEGREES_LIST
@@ -86,6 +86,8 @@ def register_page():
 
 @auth.post("/register")
 def register_submit():
+    if is_user_logged_in():
+        return redirect("/")
     zid = request.form["zid"]
     name = request.form["name"]
     password = request.form["password"]
@@ -102,7 +104,7 @@ def register_submit():
             )
         )
 
-    session["session_id"] = session_id
+    set_session(session_id)
 
     return redirect("/")
 
