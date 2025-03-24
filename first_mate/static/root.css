@@ -3,3 +3,10 @@ body {
     background-color: yellow;
     color: red;
 }
+
+
+nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}

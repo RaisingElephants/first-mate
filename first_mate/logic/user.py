@@ -10,6 +10,7 @@ from uuid import uuid4
 from typing import TypedDict
 import secrets
 from .data import get_data, save_data
+from base64 import b64encode
 
 
 class User(TypedDict):
@@ -39,6 +40,11 @@ class User(TypedDict):
 
 def make_session_id() -> int:
     return secrets.randbelow(sys.maxsize)
+
+
+def hash_and_salt(password: str, salt: str) -> str:
+    hashed_bytes = hashlib.sha256(f"{salt}{password}".encode()).digest()
+    return b64encode(hashed_bytes).decode()
 
 
 def get_user_by_zid(zid: str) -> User | None:
@@ -116,7 +122,7 @@ def register_user(
 
     # Hash and salt password
     salt = str(uuid4())
-    hashed = hashlib.sha256(f"{salt}{password}".encode()).digest().decode()
+    hashed = hash_and_salt(password, salt)
 
     session_id = make_session_id()
 
@@ -161,7 +167,7 @@ def login_user(zid: str, password: str) -> int | None:
 
     # Hash password
     salt = user["password_salt"]
-    hashed = hashlib.sha256(f"{salt}{password}".encode()).digest().decode()
+    hashed = hash_and_salt(password, salt)
 
     if hashed != user["password_hash"]:
         return None
