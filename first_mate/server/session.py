@@ -34,6 +34,8 @@ def get_user() -> User | None:
 def set_session(session_id: int) -> None:
     session["session_id"] = session_id
     session.modified = True
+    # Stay logged in
+    session.permanent = True
 
 
 def clear_session():
