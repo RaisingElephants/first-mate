@@ -5,16 +5,13 @@ from pprint import pprint
 from typing import Literal
 
 import icalendar
-import pytz
 import recurring_ical_events
 
-from class_analysis import ClassEvent, event_to_class_info
+from .class_analysis import ClassEvent, event_to_class_info
+from first_mate.consts import LOCAL_TZ
 
 
 log = logging.getLogger(__name__)
-
-
-LOCAL_TZ = pytz.timezone("Australia/Sydney")
 
 
 def convert_webcal_to_https(url):

@@ -11,6 +11,7 @@ from flask import Flask, send_file
 from .session import is_user_logged_in
 from .util import navbar
 from .auth import auth
+from .calendar import calendar
 from .debug import debug
 
 
@@ -21,6 +22,7 @@ app = Flask(__name__)
 app.secret_key = "top secret key"
 
 app.register_blueprint(auth, url_prefix="/auth")
+app.register_blueprint(calendar, url_prefix="/calendar")
 app.register_blueprint(debug, url_prefix="/debug")
 
 
@@ -32,7 +34,7 @@ def root():
             p.head(
                 p.title("First-mate"),
                 p.link(href="/static/root.css", rel="stylesheet"),
-                
+
             ),
             p.body(
                 navbar(logged_in),
@@ -41,7 +43,7 @@ def root():
                     p.p(class_="about-page")
                     ("Our website aims to solve the problem that all UNSW "
                     "students face: making friends with people in their courses."),
-                    p.img(class_="elephant")( 
+                    p.img(class_="elephant")(
                         src="https://cdn.britannica.com/02/152302-050-1A984FCB/African-savanna-elephant.jpg",
                         alt="Elephant"),
                     p.p(class_="about-page")
