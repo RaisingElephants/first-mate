@@ -32,11 +32,12 @@ def root():
             p.head(
                 p.title("First-mate"),
                 p.link(href="/static/root.css", rel="stylesheet"),
+                
             ),
             p.body(
                 navbar(logged_in),
-                p.h1("First Mate"),
-                p.p("Hello, world!"),
+                p.h1("First Mate - Raising Elephants"),
+                p.p("Hello world!"),
             ),
         )
     )
