@@ -41,8 +41,8 @@ def show_calendar():
         return redirect("/auth/login")
 
     week_offset = int(request.args.get("offset", "0"))
-    week_str = week_offset_to_str(week_offset)
     start, end = get_week_range(week_offset)
+    week_str = f"{week_offset_to_str(week_offset)}, {start.strftime('%x')} - {end.strftime('%x')}"
     calendar_events = find_class_events(user["calendar"], start, end)
 
     events_html = (
