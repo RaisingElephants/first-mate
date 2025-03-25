@@ -107,10 +107,6 @@ def generate_footer() -> footer:
     )
 
 
-def generate_header(logged_in: bool) -> header:
-    return header(div(navbar(logged_in), _class="container"), _class="sticky-header")
-
-
 def generate_hero(logged_in: bool) -> section:
     return section(
         div(
@@ -156,7 +152,7 @@ def generate_hero(logged_in: bool) -> section:
 def generate_body(logged_in: bool) -> body:
     return body(
         div(
-            generate_header(logged_in),
+            navbar(logged_in),
             main(
                 generate_hero(logged_in),
                 generate_features(),

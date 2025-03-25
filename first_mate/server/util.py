@@ -59,7 +59,7 @@ def list_to_checkboxes(
     return p.div(html_values)
 
 
-def navbar(logged_in: bool) -> p.nav:
+def navbar(logged_in: bool) -> p.header:
     if logged_in:
         auth_options = [
             p.a("Find mates", href="/mates", _class="btn btn-primary"),
@@ -79,11 +79,15 @@ def navbar(logged_in: bool) -> p.nav:
         )
     ]
 
-    return p.nav(
-        generate_logo(),
-        auth_options,
-        debug_options,
-        _class="main-nav",
+    return p.header(_class="sticky-header")(
+        p.div(_class="container")(
+            p.nav(
+                generate_logo(),
+                auth_options,
+                debug_options,
+                _class="main-nav",
+            )
+        )
     )
 
 

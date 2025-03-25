@@ -104,7 +104,7 @@ a:hover {
 }
 
 .main-nav {
-    display: none;
+    display: flex;
     align-items: center;
     gap: 1.5rem;
 }
