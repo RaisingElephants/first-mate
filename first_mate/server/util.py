@@ -62,7 +62,7 @@ def list_to_checkboxes(
 def navbar(logged_in: bool) -> p.header:
     if logged_in:
         auth_options = [
-            p.a("Find mates", href="/mates", _class="btn btn-primary"),
+            p.a("Find your mates", href="/mates", _class="btn btn-primary"),
             p.a("My profile", href="/profile", _class="btn btn-outline"),
             p.a("Log Out", href="/auth/logout", _class="btn btn-outline"),
         ]

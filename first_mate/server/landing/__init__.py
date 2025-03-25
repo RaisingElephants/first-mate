@@ -35,7 +35,7 @@ def generate_cta(logged_in: bool) -> p.section:
                     )
                     if not logged_in
                     else p.a(href="/mates", _class="btn btn-primary btn-lg")(
-                        "Look for mates",
+                        "Find your mates",
                     )
                 ),
             ),
@@ -88,7 +88,7 @@ def generate_hero(logged_in: bool) -> p.section:
                         else p.a(
                             href="/mates",
                             _class="btn btn-primary btn-lg",
-                        )("Look for mates")
+                        )("Find your mates")
                     ),
                     p.a(
                         href="#features",
