@@ -37,9 +37,13 @@ def root():
             p.body(
                 navbar(logged_in),
                 p.h1("First Mate - Raising Elephants"),
-                p.p("Hello world!"),
-            ),
-        )
+                p.div(class_="introduction")(
+                    p.p("Our website aims to solve the problem that all UNSW "
+                    "students face: making friends with people in their courses."),
+                )
+            
+            )
+        ),
     )
 
 

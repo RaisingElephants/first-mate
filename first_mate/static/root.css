@@ -20,7 +20,21 @@ h2 {
     gap: 10px;
     align-items: right;
 }
-
+p {
+    margin: 50px;
+    padding-top: 30px;
+    font-size: 1.5em;
+}
+.debug_button {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin-left:auto;
+    margin-right:auto;
+    height: 10%;
+}
 form {
     background-color: #162030;
     width: 50%;
@@ -41,7 +55,7 @@ input {
     border: none;
 }
 
-label{
+label {
     float: left;
     margin-right: 10px;
     margin-bottom: 10px;
@@ -61,12 +75,14 @@ nav {
     margin: 0;
     padding: 0;
     border-radius: 0px;
+    height: 75px;
 }   
+
 nav a {
     display: inline;
     color: white;
     text-decoration: none;
-    padding: 35px 16px;
+    padding: 24px 16px;
     border-radius: 0px;
     margin: 0;
     font-size: 1;
