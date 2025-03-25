@@ -108,3 +108,14 @@ nav a {
 nav a:hover {
     background-color: #1e2e3f;
 }
+
+.profile-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 100px;
+}
+
+.profile-description {
+    margin: 15px;
+}
