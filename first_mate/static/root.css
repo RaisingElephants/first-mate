@@ -36,6 +36,11 @@ h2 {
     margin-right:auto;
     height: 10%;
 }
+.introduction {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
 .elephant {
     display: flex;
     flex-direction: column;
@@ -88,7 +93,7 @@ nav {
     padding: 0;
     border-radius: 0px;
     height: 75px;
-}   
+}
 
 nav a {
     display: inline;
