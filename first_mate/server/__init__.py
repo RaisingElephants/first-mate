@@ -20,8 +20,7 @@ from .profile import profile
 app = Flask(__name__)
 
 
-# FIXME: Load from .env
-app.secret_key = "top secret key"
+app.secret_key = os.getenv("FIRSTMATE_SECRET")
 
 app.register_blueprint(auth, url_prefix="/auth")
 app.register_blueprint(mates, url_prefix="/mates")

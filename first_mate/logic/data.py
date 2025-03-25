@@ -4,6 +4,7 @@ Data store
 
 from __future__ import annotations
 import json
+import os
 from typing import TYPE_CHECKING, TypedDict, cast
 
 if TYPE_CHECKING:
@@ -14,7 +15,8 @@ class Data(TypedDict):
     users: list["User"]
 
 
-DATASTORE_FILE = "data.json"
+DATA_DIR = os.getenv("FIRSTMATE_DATA", ".")
+DATASTORE_FILE = f"{DATA_DIR}/data.json"
 
 
 __data_cache: Data | None = None
@@ -37,7 +39,7 @@ def get_data() -> Data:
         with open(DATASTORE_FILE, "r") as f:
             __data_cache = cast(Data, json.load(f))
             return __data_cache
-    except FileNotFoundError:
+    except (FileNotFoundError, json.decoder.JSONDecodeError):
         print("Data file not found, starting from empty")
         __data_cache = default_data()
         save_data()

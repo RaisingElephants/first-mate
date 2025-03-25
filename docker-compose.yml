@@ -1,0 +1,24 @@
+# COMP1010 Deployed Apps
+# docker-compose.yml
+#
+# Usage:
+# * Each app is deployed in its own docker container, with the containers being
+#   coordinated by this image.
+# * Start them all by running `docker compose up`
+# * The ports for the desired apps should then be forwarded
+services:
+  firstmate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: firstmate
+    restart: unless-stopped
+    entrypoint: ["uwsgi", "-w", "first_mate.server:app", "uwsgi.ini"]
+    ports:
+      - 127.0.0.1:7890:8000/tcp
+      # Monitoring port
+      # - 127.0.0.1:9004:9000/tcp
+    volumes:
+      - "./data:/home/uwsgi/data:rw"
+    environment:
+      FIRSTMATE_DATA: "data"
