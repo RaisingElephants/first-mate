@@ -70,7 +70,7 @@ def navbar(logged_in: bool) -> p.nav:
 
     # TODO: Make this only enabled in debug mode
     debug_options = [
-        p.form(action="debug/clear", class_="debug_button")(
+        p.form(action="/debug/clear", class_="debug_button")(
             p.input(type="submit", value="Reset server"),
         )
     ]
