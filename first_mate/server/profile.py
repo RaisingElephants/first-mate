@@ -39,42 +39,50 @@ def profile_root():
     return redirect(f"/profile/{user['id']}")
 
 
+def format_time(t: int) -> str:
+    return datetime.fromtimestamp(t).strftime("%-I:%M%p")
+
+
 def calendar_event_to_html(ev: ClassEvent) -> p.div:
     start_dt = datetime.fromtimestamp(ev["start"], LOCAL_TZ)
-    end_dt = datetime.fromtimestamp(ev["end"], LOCAL_TZ)
-
+    time_str = f"{format_time(ev['start'])} - {format_time(ev['end'])}"
     day_str = start_dt.strftime("%A %B %-d")
-
-    time_str = f"{start_dt.strftime('%-I:%M%p')} - {end_dt.strftime('%-I:%M%p')}"
-
     return p.div(_class="calendar-event")(
         p.h2(f"{ev['course_code']} {ev['class_type']}"),
-        p.p(
-            day_str,
-            p.br(),
-            time_str,
+        p.div(_class="event-details")(
+            p.p(
+                day_str,
+                p.br(),
+                time_str,
+            ),
+            p.p(ev["location"]),
         ),
-        p.p(ev["location"]),
     )
 
 
 def match_to_html(match: MatchInfo) -> p.div:
-    timing = "Before" if match["before"] else "After"
-    time_str = datetime.fromtimestamp(match["time"], LOCAL_TZ).strftime("%c")
+    start_dt = datetime.fromtimestamp(match["start"], LOCAL_TZ)
+    if match["before"]:
+        timing = "Before"
+        starting = "Starting"
+        time_str = format_time(match["start"])
+    else:
+        timing = "After"
+        starting = "Finishing"
+        time_str = format_time(match["end"])
+    day_str = start_dt.strftime("%A %B %-d")
 
-    return p.div(
+    return p.div(_class="calendar-event")(
         p.p(
-            f"{timing} {match['class_description']}",
-            p.br(),
-            f"On {time_str}",
+            p.h2(f"{timing} your {match['class_description']}"),
+            p.p(f"{starting} {time_str} on {day_str}"),
         )
     )
 
 
-def schedule_matches_html(matches: list[MatchInfo]) -> p.div:
+def schedule_matches_html(matches: list[MatchInfo]):
     """Make HTML to show schedule matches"""
-    matches_html = [match_to_html(match) for match in matches]
-    return p.div(matches_html)
+    return [match_to_html(match) for match in matches]
 
 
 @profile.get("/<int:id>")
@@ -139,16 +147,16 @@ def profile_page(id: int):
                     for user in matches
                 ]
                 if len(matches)
-                else [p.p(p.i("Nobody has matched with you yet"))]
+                else [p.p(p.i("Nobody has matched with you yet."))]
             ),
         ]
 
         calendar_events = find_class_events(me["calendar"], start, end)
         calendar_html = [
             p.h2("Your calendar"),
-            p.p("Your calendar is not shown to other users"),
+            p.p("Your calendar is not shown to other users."),
             time_picker,
-            *(
+            p.div(_class="calendar")(
                 [calendar_event_to_html(event) for event in calendar_events]
                 if len(calendar_events)
                 else [p.i("Your don't have any events this week.")]
@@ -160,9 +168,9 @@ def profile_page(id: int):
 
         schedule_matches = get_matching_times(me, them, start, end)
         calendar_html = [
-            p.h2("Your shared events"),
+            p.h2("Your meet-up opportunities"),
             time_picker,
-            (
+            p.div(_class="calendar")(
                 schedule_matches_html(schedule_matches)
                 if len(schedule_matches)
                 else p.i("Your schedules don't overlap this week.")
@@ -239,7 +247,7 @@ def profile_edit_page(id: int):
                             ),
                         ),
                         banner_html,
-                        p.p(p.i("You can edit your profile picture using Gravatar")),
+                        p.p(p.i("You can edit your profile picture using Gravatar.")),
                         # Name
                         p.div(p.label(for_="edit-name")("Display name")),
                         p.input(
