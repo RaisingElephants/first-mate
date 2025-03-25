@@ -11,6 +11,7 @@ from flask import Blueprint, redirect
 from first_mate.logic.class_analysis import ClassEvent
 from first_mate.logic.ical_analysis import find_class_events
 from first_mate.server.session import get_user
+from first_mate.server.util import navbar
 
 from ..consts import LOCAL_TZ
 
@@ -50,8 +51,10 @@ def show_calendar():
         p.html(
             p.head(
                 p.title("Calendar view"),
+                p.link(href="/static/root.css", rel="stylesheet"),
             ),
             p.body(
+                navbar(True),
                 p.h1("Your calendar"),
                 events_html,
             ),

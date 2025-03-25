@@ -36,7 +36,6 @@ def root():
             p.head(
                 p.title("First-mate"),
                 p.link(href="/static/root.css", rel="stylesheet"),
-
             ),
             p.body(
                 navbar(logged_in),

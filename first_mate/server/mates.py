@@ -11,6 +11,7 @@ from flask import Blueprint, redirect
 from first_mate.logic.event_overlap import MatchInfo, Mate, find_mates
 from first_mate.logic.user import get_user_by_zid
 from first_mate.server.session import get_user
+from first_mate.server.util import navbar
 
 from ..consts import LOCAL_TZ
 
@@ -59,8 +60,10 @@ def show_potential_mates():
         p.html(
             p.head(
                 p.title("Calendar view"),
+                p.link(href="/static/root.css", rel="stylesheet"),
             ),
             p.body(
+                navbar(True),
                 p.h1("Your mate recommendations"),
                 mates_html,
             ),
