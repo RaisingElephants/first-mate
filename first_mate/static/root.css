@@ -12,8 +12,6 @@
 
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 html {
@@ -210,14 +208,6 @@ a:hover {
 
 .profile-description {
     margin: 15px 0;
-}
-
-.profile-edit-actions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    width: 100%;
 }
 
 .profile-name-span {

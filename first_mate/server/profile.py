@@ -22,7 +22,6 @@ from first_mate.server.util import (
     error_page,
     navbar,
     profile_banner_html,
-    profile_image,
     week_offset_to_str,
 )
 
@@ -114,8 +113,7 @@ def profile_page(id: int):
 
     # Give edit option if it's us
     if its_me:
-        edit_option = [
-        ]
+        edit_option = []
 
         # List all matches with us
         matches = [
@@ -208,6 +206,8 @@ def profile_edit_page(id: int):
             )
         ), 403
 
+    banner_html = profile_banner_html(id, its_you=True)
+
     return str(
         p.html(
             p.head(
@@ -217,65 +217,68 @@ def profile_edit_page(id: int):
             ),
             p.body(
                 navbar(True),
-                p.h1("Edit profile"),
-                profile_image(user["zid"], user["display_name"]),
-                p.i("You can edit your profile picture using Gravatar"),
-                p.form(
-                    # Main profile edit
-                    # Submit
-                    p.div(_class="profile-edit-actions")(
-                        p.input(
-                            type="submit",
-                            value="Save",
-                            name="save",
-                            _class="btn btn-primary",
+                p.main(
+                    p.h1("Edit profile"),
+                    p.form(
+                        # Main profile edit
+                        # Submit
+                        p.div(_class="profile-edit-actions")(
+                            p.input(
+                                type="submit",
+                                value="Save",
+                                name="save",
+                                _class="btn btn-primary",
+                            ),
+                            p.input(
+                                type="submit", value="Cancel", _class="btn btn-outline"
+                            ),
                         ),
+                        banner_html,
+                        p.p(p.i("You can edit your profile picture using Gravatar")),
+                        # Name
+                        p.div(p.label(for_="edit-name")("Display name")),
                         p.input(
-                            type="submit", value="Cancel", _class="btn btn-outline"
+                            type="text",
+                            id="edit-name",
+                            name="name",
+                            placeholder="Display name",
+                            value=user["display_name"],
+                            required=True,
                         ),
-                    ),
-                    # Name
-                    p.label(for_="edit-name")(p.p("Display name")),
-                    p.input(
-                        id="edit-name",
-                        name="name",
-                        placeholder="Display name",
-                        value=user["display_name"],
-                        required=True,
-                    ),
-                    # Profile description
-                    p.label(for_="edit-public-description")(
-                        p.p("Public profile description. This is shown to all users."),
-                    ),
-                    p.textarea(style="width: 100%; height: 200px;")(
-                        id="edit-public-description",
-                        name="public_description",
-                        placeholder="Your public profile description",
-                    )(user["public_description"]),
-                    p.label(for_="edit-private-description")(
-                        p.p(
+                        # Profile description
+                        p.div(p.label(for_="edit-public-description")(
+                            "Public profile description. This is shown to all users."
+                        )),
+                        p.textarea(style="width: 100%; height: 200px;")(
+                            id="edit-public-description",
+                            name="public_description",
+                            placeholder="Your public profile description",
+                        )(user["public_description"]),
+                        p.div(p.label(for_="edit-private-description")(
                             "Public profile description. This is only shown to "
                             "users who you have matched with."
+                        )),
+                        p.textarea(style="width: 100%; height: 200px;")(
+                            id="edit-private-description",
+                            name="private_description",
+                            placeholder="Your private profile description",
+                        )(user["private_description"]),
+                        # TODO: Degrees
+                    ),
+                    p.form(action=f"/profile/{id}/edit/calendar")(
+                        p.div(p.label(for_="calendar-url")("Calendar URL")),
+                        p.input(
+                            type="url",
+                            id="calendar-url",
+                            name="calendar_url",
+                            placeholder="webcal://example.com/calendar.ics",
+                            required=True,
                         ),
-                    ),
-                    p.textarea(style="width: 100%; height: 200px;")(
-                        id="edit-private-description",
-                        name="private_description",
-                        placeholder="Your private profile description",
-                    )(user["private_description"]),
-                    # TODO: Degrees
-                ),
-                p.form(action=f"/profile/{id}/edit/calendar")(
-                    p.label(for_="calendar-url")(p.p("Calendar URL")),
-                    p.input(
-                        type="url",
-                        id="calendar-url",
-                        name="calendar_url",
-                        placeholder="webcal://example.com/calendar.ics",
-                        required=True,
-                    ),
-                    p.input(
-                        type="submit", value="Update calendar", _class="btn btn-primary"
+                        p.div(p.input(
+                            type="submit",
+                            value="Update calendar",
+                            _class="btn btn-primary",
+                        )),
                     ),
                 ),
             ),
