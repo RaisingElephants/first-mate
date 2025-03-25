@@ -56,7 +56,7 @@ def profile_page(zid: str):
     else:
         edit_option = []
 
-    banner_html = profile_banner_html(zid, matched)
+    banner_html = profile_banner_html(zid, matched=matched)
 
     return str(
         p.html(

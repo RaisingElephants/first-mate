@@ -41,7 +41,7 @@ def mate_to_html(mate: Mate) -> p.div:
 
     return p.div(
         # FIXME: Update this if matched
-        profile_banner_html(mate["zid"], False),
+        profile_banner_html(mate["zid"], matched=False, link=True),
         p.p("Not matched yet"),
         matches_html,
     )

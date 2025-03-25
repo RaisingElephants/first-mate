@@ -157,7 +157,7 @@ def profile_image(zid: str, username: str) -> p.img:
     )
 
 
-def profile_banner_html(zid: str, matched: bool) -> p.div:
+def profile_banner_html(zid: str, *, matched: bool, link: bool = False) -> p.div:
     """Generate a banner for a user's profile
 
     Parameters
@@ -192,10 +192,14 @@ def profile_banner_html(zid: str, matched: bool) -> p.div:
         display_name = user_to_view["display_name"]
         private_profile_text = []
 
+    name_html = (
+        p.a(href=f"/profile/{zid}")(display_name) if link else p.span(display_name)
+    )
+
     return p.div(_class="profile-banner")(
         profile_image(zid, user_to_view["display_name"]),
         p.div(_class="profile-banner-inner")(
-            p.h2(display_name),
+            p.h2(name_html),
             public_profile_text,
             private_profile_text,
         ),
