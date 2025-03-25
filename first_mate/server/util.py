@@ -162,8 +162,8 @@ def profile_banner_html(
     *,
     you_liked: bool = False,
     liked_you: bool = False,
-    link: bool = False,
-    is_me: bool = False,
+    link: int | None = None,
+    its_you: bool = False,
 ) -> p.div:
     """Generate a banner for a user's profile
 
@@ -171,8 +171,15 @@ def profile_banner_html(
     ----------
     zid : str
         zID of profile to generate
-    matched : bool
-        Whether to show the private match-only data.
+    you_liked : bool
+        Whether you liked this user
+    liked_you : bool
+        Whether this user liked you
+    link : int | None
+        Week offset to use in link to profile, or `None` to disable profile
+        link.
+    its_you : bool
+        Whether the profile is the user's own
 
     Returns
     -------
@@ -200,10 +207,12 @@ def profile_banner_html(
         private_profile_text = []
 
     name_html = (
-        p.a(href=f"/profile/{zid}")(display_name) if link else p.span(display_name)
+        p.a(href=f"/profile/{zid}?offset={link}")(display_name)
+        if link
+        else p.span(display_name)
     )
 
-    if is_me:
+    if its_you:
         its_you_text = [
             p.p(
                 p.i(

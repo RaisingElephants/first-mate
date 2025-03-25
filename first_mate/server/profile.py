@@ -132,7 +132,7 @@ def profile_page(zid: str):
 
     banner_html = profile_banner_html(
         zid,
-        is_me=its_me,
+        its_you=its_me,
         liked_you=liked_you,
         you_liked=you_liked,
     )

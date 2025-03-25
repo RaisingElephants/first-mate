@@ -23,13 +23,13 @@ from first_mate.server.util import (
 mates = Blueprint("/mates", __name__)
 
 
-def mate_to_html(us: User, mate: Mate) -> p.div:
+def mate_to_html(us: User, mate: Mate, week_offset: int) -> p.div:
     them = get_user_by_zid(mate["zid"])
     assert them is not None
 
     return profile_banner_html(
         mate["zid"],
-        link=True,
+        link=week_offset,
         you_liked=mate["zid"] in us["likes"],
         liked_you=us["zid"] in them["likes"],
     )
@@ -51,7 +51,7 @@ def show_potential_mates():
     mates = find_mates(user, start, end)
 
     mates_html = (
-        [mate_to_html(user, mate) for mate in mates]
+        [mate_to_html(user, mate, week_offset) for mate in mates]
         if len(mates)
         else [
             p.p(p.i("No matches this week. Try checking another week")),
