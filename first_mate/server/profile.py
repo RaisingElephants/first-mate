@@ -271,7 +271,7 @@ def profile_edit_page(id: int):
                         )(user["public_description"]),
                         p.div(
                             p.label(for_="edit-private-description")(
-                                "Public profile description. This is only shown to "
+                                "Private profile description. This is only shown to "
                                 "users who you have matched with."
                             )
                         ),
