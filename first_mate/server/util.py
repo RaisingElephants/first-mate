@@ -68,8 +68,8 @@ def navbar(logged_in: bool) -> p.nav:
         ]
     else:
         auth_options = [
-            p.a(href="/auth/register")(p.h2("Register")),
-            p.a(href="/auth/login")(p.h2("Login")),
+            p.a("Register", href="/auth/register", Class="btn btn-primary"),
+            p.a("Log In", href="/auth/login", Class="btn btn-outline"),
         ]
 
     # TODO: Make this only enabled in debug mode
@@ -79,8 +79,27 @@ def navbar(logged_in: bool) -> p.nav:
         )
     ]
 
-    return p.nav(p.a(href="/")(p.h1("First Mate")), auth_options, debug_options)
+    return p.nav(
+        generate_logo(),
+        p.a("Features", href="#features", Class="nav-link"),
+        p.a("How It Works", href="#how-it-works", Class="nav-link"),
+        p.a("Testimonials", href="#testimonials", Class="nav-link"),
+        auth_options,
+        debug_options,
+        Class="main-nav"
+    )
 
+def generate_logo():
+    return p.a(
+        p.div(
+            p.img(src="/static/firstmate-logo.png", alt="FirstMate logo", Class="logo-icon"),
+            p.span("FirstMate", Class="logo-text"),
+            Class="logo"
+        ),
+        href="/",
+        title="Return to Homepage"
+    )
+    
 
 def error_page(
     title: str,

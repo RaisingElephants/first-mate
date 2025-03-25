@@ -35,7 +35,7 @@ def register_page():
             ),
             p.body(
                 navbar(False),
-                p.h1("Registration"),
+                # p.h1("Registration"),
                 p.div(id="login-box")(
                     p.form(
                         p.div(_class="form-row")(
@@ -44,7 +44,7 @@ def register_page():
                                 name="zid",
                                 id="zid",
                                 placeholder="z1234567",
-                                value="z1234567",
+                                # value="z1234567",
                                 required=True,
                             ),
                         ),

@@ -8,6 +8,8 @@ import os
 import pyhtml as p
 from flask import Flask, send_file
 
+from first_mate.server.landing import render_page
+
 from .session import is_user_logged_in
 from .util import navbar
 from .auth import auth
@@ -31,32 +33,7 @@ app.register_blueprint(profile, url_prefix="/profile")
 @app.get("/")
 def root():
     logged_in = is_user_logged_in()
-    return str(
-        p.html(
-            p.head(
-                p.title("First-mate"),
-                p.link(href="/static/root.css", rel="stylesheet"),
-            ),
-            p.body(
-                navbar(logged_in),
-                p.h1("First Mate - Raising Elephants"),
-                p.div(class_="introduction")(
-                    p.p(class_="about-page")(
-                        "Our website aims to solve the problem that all UNSW "
-                        "students face: making friends with people in their courses."
-                    ),
-                    p.img(class_="elephant")(
-                        src="https://cdn.britannica.com/02/152302-050-1A984FCB/African-savanna-elephant.jpg",
-                        alt="Elephant",
-                    ),
-                    p.p(class_="about-page")(
-                        "This elephant used our website to find a friend in COMP1511. "
-                        "Now it's happy and you can be too!"
-                    ),
-                ),
-            ),
-        ),
-    )
+    return render_page(logged_in)
 
 
 @app.get("/static/<filename>")
