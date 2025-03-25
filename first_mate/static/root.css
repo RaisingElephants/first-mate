@@ -56,38 +56,6 @@ h2 {
     width: 40%;
 }
 
-form {
-    background-color: #162030;
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /*
-        FIXME: Yucky values cause issues for other content
-        We should split CSS only used on specific pages to be in separate CSS
-        files and keep root.css to be global styles.
-    */
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 20px;
-    border-radius: 30px;
-}
-
-input {
-    margin-bottom: 10px;
-    padding: 5px;
-    border-radius: 5px;
-    border: none;
-}
-
-.form-row {
-    display: flex;
-    gap: 10px;
-    align-items: baseline;
-    margin: 10px;
-}
-
 
 nav {
     display: flex;
@@ -122,6 +90,11 @@ nav a:hover {
     display: flex;
     gap: 20px;
     align-items: center;
+    background-color: #162030;
+    width: 80%;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 20px;
 }
 
 .profile-image {
@@ -141,4 +114,10 @@ nav a:hover {
     justify-content: center;
     gap: 20px;
     width: 100%;
+}
+
+.profile-name-span {
+    display: flex;
+    gap: 20px;
+    align-items: center;
 }

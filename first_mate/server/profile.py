@@ -4,11 +4,18 @@ server/profile.py
 Server code for showing user profiles.
 """
 
+from datetime import datetime
 import pyhtml as p
 from flask import Blueprint, redirect, request
 
-from first_mate.logic.data import save_data
-from first_mate.logic.ical_analysis import download_ical
+from first_mate.logic.class_analysis import ClassEvent
+from first_mate.logic.data import get_data, save_data
+from first_mate.logic.event_overlap import MatchInfo, get_matching_times
+from first_mate.logic.ical_analysis import (
+    download_ical,
+    find_class_events,
+    get_week_range,
+)
 from first_mate.logic.user import get_user_by_zid
 from first_mate.server.session import get_user, is_user_logged_in
 from first_mate.server.util import (
@@ -16,7 +23,10 @@ from first_mate.server.util import (
     navbar,
     profile_banner_html,
     profile_image,
+    week_offset_to_str,
 )
+
+from ..consts import LOCAL_TZ
 
 
 profile = Blueprint("/profile", __name__)
@@ -30,10 +40,43 @@ def profile_root():
     return redirect(f"/profile/{user['zid']}")
 
 
+def calendar_event_to_html(ev: ClassEvent) -> p.div:
+    start_dt = datetime.fromtimestamp(ev["start"], LOCAL_TZ)
+    end_dt = datetime.fromtimestamp(ev["end"], LOCAL_TZ)
+
+    start_str = start_dt.strftime("%c")
+    end_str = end_dt.strftime("%X")
+
+    return p.div(_class="calendar-event")(
+        p.h2(f"{ev['course_code']} {ev['class_type']}"),
+        p.p(f"{start_str} - {end_str}"),
+        p.p(ev["location"]),
+    )
+
+
+def match_to_html(match: MatchInfo) -> p.div:
+    timing = "Before" if match["before"] else "After"
+    time_str = datetime.fromtimestamp(match["time"], LOCAL_TZ).strftime("%c")
+
+    return p.div(
+        p.p(
+            f"{timing} {match['class_description']}",
+            p.br(),
+            f"On {time_str}",
+        )
+    )
+
+
+def schedule_matches_html(matches: list[MatchInfo]) -> p.div:
+    """Make HTML to show schedule matches"""
+    matches_html = [match_to_html(match) for match in matches]
+    return p.div(matches_html)
+
+
 @profile.get("/<zid>")
 def profile_page(zid: str):
-    user_to_view = get_user_by_zid(zid)
-    if user_to_view is None:
+    them = get_user_by_zid(zid)
+    if them is None:
         return str(
             error_page(
                 "Profile - Error 404",
@@ -44,24 +87,88 @@ def profile_page(zid: str):
         ), 404
 
     me = get_user()
-    is_me = me is not None and zid == me["zid"]
+    if me is None:
+        # Don't allow unauthorized users to view profile pages
+        return redirect("/auth/login")
+
+    # NOTE: Week offset is duplicated with /calendar, perhaps use helper
+    # function?
+    week_offset = int(request.args.get("offset", "0"))
+    start, end = get_week_range(week_offset)
+    week_str = f"{week_offset_to_str(week_offset)}, {start.strftime('%x')} - {end.strftime('%x')}"
 
     # We are that user
-    # TODO: OR if we have matched with the user
-    matched = is_me
+    its_me = zid == me["zid"]
+
+    # Whether we have matched
+    liked_you = me["zid"] in them["likes"]
+    you_liked = zid in me["likes"]
 
     # Give edit option if it's us
-    if me and zid == me["zid"]:
+    if its_me:
         edit_option = [p.a(href=f"/profile/{zid}/edit")("Edit profile")]
+
+        # List all matches with us
+        matches = [
+            user
+            for user in get_data()["users"]
+            if me["zid"] in user["likes"] and user["zid"] in me["likes"]
+        ]
+        matches_html = [
+            p.h2("Your matches"),
+            *(
+                [
+                    profile_banner_html(
+                        user["zid"],
+                        liked_you=True,
+                        you_liked=True,
+                        link=week_offset,
+                    )
+                    for user in matches
+                ]
+                if len(matches)
+                else [p.p(p.i("Nobody has matched with you yet"))]
+            ),
+        ]
+
+        calendar_events = find_class_events(me["calendar"], start, end)
+        calendar_html = [
+            p.h2("Your calendar"),
+            p.p("Your calendar is not shown to other users"),
+            *(
+                [calendar_event_to_html(event) for event in calendar_events]
+                if len(calendar_events)
+                else [p.i("Your don't have any events this week.")]
+            ),
+        ]
     else:
         edit_option = []
+        matches_html = []
 
-    banner_html = profile_banner_html(zid, matched=matched, is_me=is_me)
+        schedule_matches = get_matching_times(me, them, start, end)
+        calendar_html = [
+            p.h2("Your shared events"),
+            (
+                schedule_matches_html(schedule_matches)
+                if len(schedule_matches)
+                else p.i("Your schedules don't overlap this week.")
+            ),
+        ]
+
+    banner_html = profile_banner_html(
+        zid,
+        its_you=its_me,
+        liked_you=liked_you,
+        you_liked=you_liked,
+    )
+
+    prev_week = p.a(href=f"?offset={week_offset - 1}")("Previous week")
+    next_week = p.a(href=f"?offset={week_offset + 1}")("Next week")
 
     return str(
         p.html(
             p.head(
-                p.title(f"Profile - {user_to_view['display_name']}"),
+                p.title(f"Profile - {them['display_name']}"),
                 p.link(href="/static/root.css", rel="stylesheet"),
                 p.link(href="/static/profile.css", rel="stylesheet"),
             ),
@@ -69,6 +176,13 @@ def profile_page(zid: str):
                 navbar(True),
                 banner_html,
                 edit_option,
+                matches_html,
+                p.div(
+                    prev_week,
+                    week_str,
+                    next_week,
+                ),
+                calendar_html,
             ),
         )
     )

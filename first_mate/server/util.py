@@ -62,7 +62,6 @@ def list_to_checkboxes(
 def navbar(logged_in: bool) -> p.nav:
     if logged_in:
         auth_options = [
-            p.a(href="/calendar")(p.h2("My calendar")),
             p.a(href="/mates")(p.h2("Find mates")),
             p.a(href="/profile")(p.h2("My profile")),
             p.a(href="/auth/logout")(p.h2("Log out")),
@@ -161,9 +160,10 @@ def profile_image(zid: str, username: str) -> p.img:
 def profile_banner_html(
     zid: str,
     *,
-    matched: bool = False,
-    link: bool = False,
-    is_me: bool = False,
+    you_liked: bool = False,
+    liked_you: bool = False,
+    link: int | None = None,
+    its_you: bool = False,
 ) -> p.div:
     """Generate a banner for a user's profile
 
@@ -171,8 +171,15 @@ def profile_banner_html(
     ----------
     zid : str
         zID of profile to generate
-    matched : bool
-        Whether to show the private match-only data.
+    you_liked : bool
+        Whether you liked this user
+    liked_you : bool
+        Whether this user liked you
+    link : int | None
+        Week offset to use in link to profile, or `None` to disable profile
+        link.
+    its_you : bool
+        Whether the profile is the user's own
 
     Returns
     -------
@@ -188,7 +195,7 @@ def profile_banner_html(
         else p.i("This user has not added a profile description")
     )
 
-    if matched:
+    if you_liked and liked_you:
         display_name = f"{user_to_view['display_name']} - {zid}"
         private_profile_text = p.div(_class="profile-description")(
             [multiline_str_to_html(user_to_view["private_description"])]
@@ -200,10 +207,12 @@ def profile_banner_html(
         private_profile_text = []
 
     name_html = (
-        p.a(href=f"/profile/{zid}")(display_name) if link else p.span(display_name)
+        p.a(href=f"/profile/{zid}?offset={link}")(display_name)
+        if link is not None
+        else p.span(display_name)
     )
 
-    if is_me:
+    if its_you:
         its_you_text = [
             p.p(
                 p.i(
@@ -213,13 +222,33 @@ def profile_banner_html(
                 )
             )
         ]
+        like_button = []
+        friendship_html = []
     else:
         its_you_text = []
+        if you_liked:
+            like_button = [
+                p.form(action=f"/mates/unlike/{zid}")(
+                    p.input(type="submit", value="Unlike")
+                )
+            ]
+            friendship_html = [p.i("🎉 It's a match!")] if liked_you else []
+        else:
+            like_button = [
+                p.form(action=f"/mates/like/{zid}")(
+                    p.input(type="submit", value="Like")
+                )
+            ]
+            friendship_html = [p.i("👋 Likes you!")] if liked_you else []
 
     return p.div(_class="profile-banner")(
         profile_image(zid, user_to_view["display_name"]),
         p.div(_class="profile-banner-inner")(
-            p.h2(name_html),
+            p.span(_class="profile-name-span")(
+                p.h2(name_html),
+                like_button,
+                friendship_html,
+            ),
             its_you_text,
             public_profile_text,
             private_profile_text,

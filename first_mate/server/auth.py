@@ -31,6 +31,7 @@ def register_page():
             p.head(
                 p.title("Register - First Mate"),
                 p.link(href="/static/root.css", rel="stylesheet"),
+                p.link(href="/static/auth.css", rel="stylesheet"),
             ),
             p.body(
                 navbar(False),
@@ -128,6 +129,7 @@ def login():
             p.head(
                 p.title("Login - First Mate"),
                 p.link(href="/static/root.css", rel="stylesheet"),
+                p.link(href="/static/auth.css", rel="stylesheet"),
             ),
             p.body(
                 navbar(False),
