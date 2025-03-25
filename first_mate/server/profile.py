@@ -101,8 +101,10 @@ def profile_edit_page(zid: str):
                 p.form(
                     # Main profile edit
                     # Submit
-                    p.input(type="submit", value="Save", name="save"),
-                    p.input(type="submit", value="Cancel"),
+                    p.div(_class="profile-edit-actions")(
+                        p.input(type="submit", value="Save", name="save"),
+                        p.input(type="submit", value="Cancel"),
+                    ),
                     # Name
                     p.label(for_="edit-name")(p.p("Display name")),
                     p.input(

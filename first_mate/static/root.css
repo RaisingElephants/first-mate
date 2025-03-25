@@ -130,3 +130,11 @@ nav a:hover {
 .profile-description {
     margin: 15px 0;
 }
+
+.profile-edit-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+}
