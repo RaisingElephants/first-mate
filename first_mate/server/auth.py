@@ -75,7 +75,7 @@ def register_page():
                                 name="ical",
                                 id="ical",
                                 placeholder="webcal://my.unsw.edu.au/cal/pttd/ABCDEFGHIJ.ics",
-                                value="webcal://my.unsw.edu.au/cal/pttd/ABCDEFGHIJ.ics",
+                                value="http://127.0.0.1:8000/simple.ics",
                                 required=True,
                             ),
                         ),

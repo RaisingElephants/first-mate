@@ -9,6 +9,8 @@ import sys
 from uuid import uuid4
 from typing import TypedDict
 import secrets
+
+from first_mate.logic.ical_analysis import calendar_events, download_ical
 from .data import get_data, save_data
 from base64 import b64encode
 
@@ -139,6 +141,9 @@ def register_user(
     data = get_data()
     data["users"].append(user_data)
     save_data()
+
+    cal_text = download_ical(ical_url)
+    calendar_events(cal_text)
 
     return session_id
 

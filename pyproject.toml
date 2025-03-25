@@ -8,6 +8,7 @@ dependencies = [
     "flask>=3.1.0",
     "icalendar>=6.1.2",
     "pyhtml-enhanced>=2.2.2",
+    "requests>=2.32.3",
 ]
 
 [dependency-groups]

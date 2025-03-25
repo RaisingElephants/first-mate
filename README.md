@@ -18,8 +18,14 @@ uv install
 uv run basedpyright
 ```
 
-## Run the app
+### Run the app
 
 ```sh
 uv run -m first-mate
+```
+
+### Serve the directory of test calendars
+
+```sh
+python -m http.server -d test_calendars -b 127.0.0.1
 ```
