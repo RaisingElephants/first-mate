@@ -62,44 +62,49 @@ def list_to_checkboxes(
 def navbar(logged_in: bool) -> p.nav:
     if logged_in:
         auth_options = [
-            p.a(href="/mates")(p.h2("Find mates")),
-            p.a(href="/profile")(p.h2("My profile")),
-            p.a(href="/auth/logout")(p.h2("Log out")),
+            p.a("Find mates", href="/mates", _class="btn btn-primary"),
+            p.a("My profile", href="/profile", _class="btn btn-outline"),
+            p.a("Log Out", href="/auth/logout", _class="btn btn-outline"),
         ]
     else:
         auth_options = [
-            p.a("Register", href="/auth/register", Class="btn btn-primary"),
-            p.a("Log In", href="/auth/login", Class="btn btn-outline"),
+            p.a("Register", href="/auth/register", _class="btn btn-primary"),
+            p.a("Log In", href="/auth/login", _class="btn btn-outline"),
         ]
 
     # TODO: Make this only enabled in debug mode
     debug_options = [
-        p.form(action="/debug/clear", _class="debug_button")(
-            p.input(type="submit", value="Reset server"),
+        p.form(action="/debug/clear")(
+            p.input(type="submit", value="Reset server", _class="btn btn-debug"),
         )
     ]
 
     return p.nav(
         generate_logo(),
-        p.a("Features", href="#features", Class="nav-link"),
-        p.a("How It Works", href="#how-it-works", Class="nav-link"),
-        p.a("Testimonials", href="#testimonials", Class="nav-link"),
+        p.a("Features", href="#features", _class="nav-link"),
+        p.a("How It Works", href="#how-it-works", _class="nav-link"),
+        p.a("Testimonials", href="#testimonials", _class="nav-link"),
         auth_options,
         debug_options,
-        Class="main-nav"
+        _class="main-nav",
     )
+
 
 def generate_logo():
     return p.a(
         p.div(
-            p.img(src="/static/firstmate-logo.png", alt="FirstMate logo", Class="logo-icon"),
-            p.span("FirstMate", Class="logo-text"),
-            Class="logo"
+            p.img(
+                src="/static/firstmate-logo.png",
+                alt="FirstMate logo",
+                _class="logo-icon",
+            ),
+            p.span("FirstMate", _class="logo-text"),
+            _class="logo",
         ),
         href="/",
-        title="Return to Homepage"
+        title="Return to Homepage",
     )
-    
+
 
 def error_page(
     title: str,

@@ -160,6 +160,16 @@ border: 1px solid var(--border);
 background-color: var(--muted);
 }
 
+.btn-debug {
+background-color: rgb(255, 93, 93);
+color: var(--primary-foreground);
+border: 1px solid rgb(255, 93, 93);
+}
+
+.btn-debug:hover {
+opacity: 0.8;
+}
+
 .icon {
 height: 1rem;
 width: 1rem;
