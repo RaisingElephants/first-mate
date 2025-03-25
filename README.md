@@ -26,8 +26,14 @@ uv install
 uv run basedpyright
 ```
 
-## Run the app
+### Run the app
 
 ```sh
 uv run -m first_mate
 ```
+
+## Deploying
+
+Easiest with Docker Compose. Data file can't be written unless it was created
+before the container starts. I don't know why, and I want to sleep, so I'll
+troubleshoot some other time.
