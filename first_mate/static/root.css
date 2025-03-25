@@ -4,6 +4,7 @@ body {
     color: white;
     font-family: Arial;
     padding-top: 100px;
+    padding-bottom: 50px;
 }
 
 h1 {
@@ -56,10 +57,11 @@ input {
 }
 
 label {
-    float: left;
     margin-right: 10px;
     margin-bottom: 10px;
     padding: 5px;
+    display: inline-block;
+
 }
 
 
