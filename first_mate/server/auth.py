@@ -15,7 +15,7 @@ from first_mate.server.session import (
 )
 
 from .util import error_page, list_to_checkboxes, navbar
-from ..consts import DEGREES_LIST
+from ..consts import DEGREES_LIST, dev
 from first_mate.logic.user import login_user, logout_user, register_user
 
 
@@ -46,7 +46,6 @@ def register_page():
                                     name="zid",
                                     id="zid",
                                     placeholder="z1234567",
-                                    # value="z1234567",
                                     required=True,
                                 ),
                             ),
@@ -57,7 +56,7 @@ def register_page():
                                     name="name",
                                     id="name",
                                     placeholder="Robin Banks",
-                                    value="Robin Banks",
+                                    value="Robin Banks" if dev() else "",
                                     required=True,
                                 ),
                             ),
@@ -68,7 +67,7 @@ def register_page():
                                     name="password",
                                     id="password",
                                     placeholder="••••••••",
-                                    value="abc123ABC",
+                                    value="abc123ABC" if dev() else "",
                                     required=True,
                                 ),
                             ),
@@ -84,7 +83,11 @@ def register_page():
                                     name="ical",
                                     id="ical",
                                     placeholder="webcal://my.unsw.edu.au/cal/pttd/ABCDEFGHIJ.ics",
-                                    value="webcal://localhost:8000/sid.ics",
+                                    value=(
+                                        "webcal://localhost:8000/sid.ics"
+                                        if dev()
+                                        else ""
+                                    ),
                                     required=True,
                                 ),
                             ),
@@ -157,7 +160,6 @@ def login():
                                     name="zid",
                                     id="zid",
                                     placeholder="z1234567",
-                                    value="z1234567",
                                 ),
                             ),
                             p.div(_class="form-row")(
@@ -167,7 +169,7 @@ def login():
                                     name="password",
                                     id="password",
                                     placeholder="********",
-                                    value="abc123ABC",
+                                    value="abc123ABC" if dev() else "",
                                 ),
                             ),
                             p.div(
