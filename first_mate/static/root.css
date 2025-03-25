@@ -62,6 +62,11 @@ form {
     display: flex;
     flex-direction: column;
     align-items: center;
+    /*
+        FIXME: Yucky values cause issues for other content
+        We should split CSS only used on specific pages to be in separate CSS
+        files and keep root.css to be global styles.
+    */
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
@@ -76,12 +81,11 @@ input {
     border: none;
 }
 
-label {
-    margin-right: 10px;
-    margin-bottom: 10px;
-    padding: 5px;
-    display: inline-block;
-
+.form-row {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    margin: 10px;
 }
 
 

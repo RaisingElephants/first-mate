@@ -37,7 +37,7 @@ def register_page():
                 p.h1("Registration"),
                 p.div(id="login-box")(
                     p.form(
-                        p.p(
+                        p.div(_class="form-row")(
                             p.label(for_="zid")("Your zID"),
                             p.input(
                                 name="zid",
@@ -47,7 +47,7 @@ def register_page():
                                 required=True,
                             ),
                         ),
-                        p.p(
+                        p.div(_class="form-row")(
                             p.label(for_="name")("Your name"),
                             p.input(
                                 name="name",
@@ -57,7 +57,7 @@ def register_page():
                                 required=True,
                             ),
                         ),
-                        p.p(
+                        p.div(_class="form-row")(
                             p.label(for_="password")("Your password"),
                             p.input(
                                 type="password",
@@ -68,7 +68,7 @@ def register_page():
                                 required=True,
                             ),
                         ),
-                        p.p(
+                        p.div(_class="form-row")(
                             p.label(for_="ical")("Your UNSW calendar iCal link"),
                             p.input(
                                 type="url",
