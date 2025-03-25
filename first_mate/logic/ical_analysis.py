@@ -6,6 +6,7 @@ from typing import Literal
 
 import icalendar
 import recurring_ical_events
+import requests
 
 from .class_analysis import ClassEvent, event_to_class_info
 from first_mate.consts import LOCAL_TZ
@@ -14,11 +15,30 @@ from first_mate.consts import LOCAL_TZ
 log = logging.getLogger(__name__)
 
 
-def convert_webcal_to_https(url):
-    """Convert webcal:// URL to https://"""
+def convert_webcal_to_https(url: str) -> str:
+    """Convert `webcal://` URL to `https://`"""
     if url.startswith("webcal://"):
         return url.replace("webcal://", "https://")
     return url
+
+
+def download_ical(url: str) -> str:
+    """
+    Given a URL, download the calendar stored at it
+
+    Parameters
+    ----------
+    url : str
+        URL to download
+
+    Returns
+    -------
+    str
+        ical string
+    """
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.text
 
 
 def create_event_hash(event):

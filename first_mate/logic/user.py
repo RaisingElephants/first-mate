@@ -9,6 +9,8 @@ import sys
 from uuid import uuid4
 from typing import TypedDict
 import secrets
+
+from first_mate.logic.ical_analysis import download_ical
 from .data import get_data, save_data
 from base64 import b64encode
 
@@ -31,8 +33,8 @@ class User(TypedDict):
     password_salt: str
     """Salt for user's password"""
 
-    ical_url: str
-    """URL for the user's UNSW calendar"""
+    calendar: str
+    """String containing the user's calendar in ical format"""
 
     degrees: list[str]
     """List of degrees that the user is studying"""
@@ -131,7 +133,7 @@ def register_user(
         "display_name": display_name,
         "password_hash": hashed,
         "password_salt": salt,
-        "ical_url": ical_url,
+        "calendar": download_ical(ical_url),
         "degrees": degrees,
         "sessions": [session_id],
     }

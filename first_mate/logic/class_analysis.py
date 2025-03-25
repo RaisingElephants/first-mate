@@ -3,11 +3,8 @@ Code for analysing classes (the university type, not the Python type)
 to determine info about them.
 """
 
-from datetime import datetime
 import re
 from typing import TypeVar, Protocol, TypedDict
-
-import icalendar
 
 
 class SupportsIn(Protocol):
