@@ -8,6 +8,7 @@ import pyhtml as p
 from flask import Blueprint, redirect, request
 
 from first_mate.logic.data import save_data
+from first_mate.logic.ical_analysis import download_ical
 from first_mate.logic.user import get_user_by_zid
 from first_mate.server.session import get_user, is_user_logged_in
 from first_mate.server.util import (
@@ -136,6 +137,17 @@ def profile_edit_page(zid: str):
                     )(user["private_description"]),
                     # TODO: Degrees
                 ),
+                p.form(action=f"/profile/{zid}/edit/calendar")(
+                    p.label(for_="calendar-url")(p.p("Calendar URL")),
+                    p.input(
+                        type="url",
+                        id="calendar-url",
+                        name="calendar_url",
+                        placeholder="webcal://example.com/calendar.ics",
+                        required=True,
+                    ),
+                    p.input(type="submit", value="Update calendar"),
+                ),
             ),
         )
     )
@@ -167,6 +179,29 @@ def profile_edit_submit(zid: str):
     user["display_name"] = display_name
     user["public_description"] = public_description
     user["private_description"] = private_description
+    save_data()
+
+    return redirect(f"/profile/{zid}")
+
+
+@profile.post("/<zid>/edit/calendar")
+def profile_edit_calendar_submit(zid: str):
+    user = get_user()
+    if user is None:
+        return redirect("/auth/login")
+    if user["zid"] != zid:
+        return str(
+            error_page(
+                "Edit Profile - Error 403",
+                "Error 403",
+                "You cannot edit a profile that isn't yours",
+                True,
+            )
+        ), 403
+
+    calendar_url = request.form["calendar_url"]
+
+    user["calendar"] = download_ical(calendar_url)
     save_data()
 
     return redirect(f"/profile/{zid}")
