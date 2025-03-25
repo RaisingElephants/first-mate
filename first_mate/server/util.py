@@ -182,18 +182,20 @@ def profile_banner_html(zid: str, matched: bool) -> p.div:
     )
 
     if matched:
+        display_name = f"{user_to_view['display_name']} - {zid}"
         private_profile_text = p.div(_class="profile-description")(
             [multiline_str_to_html(user_to_view["private_description"])]
             if user_to_view["private_description"]
             else [p.i("This user has not added a private profile description")]
         )
     else:
+        display_name = user_to_view["display_name"]
         private_profile_text = []
 
     return p.div(_class="profile-banner")(
         profile_image(zid, user_to_view["display_name"]),
         p.div(_class="profile-banner-inner")(
-            p.h2(user_to_view["display_name"]),
+            p.h2(display_name),
             public_profile_text,
             private_profile_text,
         ),
