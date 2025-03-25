@@ -123,7 +123,7 @@ def like_user(zid: str):
     user["likes"].append(zid)
     save_data()
 
-    return redirect("/mates")
+    return redirect(f"/profile/{zid}")
 
 
 @mates.post("/unlike/<zid>")
