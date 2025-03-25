@@ -12,7 +12,7 @@ from first_mate.logic.event_overlap import MatchInfo, Mate, find_mates
 from first_mate.logic.ical_analysis import get_week_range
 from first_mate.logic.user import get_user_by_zid
 from first_mate.server.session import get_user
-from first_mate.server.util import navbar
+from first_mate.server.util import navbar, week_offset_to_str
 
 from ..consts import LOCAL_TZ
 
@@ -49,16 +49,18 @@ def show_potential_mates():
     if user is None:
         return redirect("/auth/login")
 
-
-    week_offset = int(request.args.get("week", "0"))
+    # NOTE: Week offset is duplicated with /calendar, perhaps use helper
+    # function?
+    week_offset = int(request.args.get("offset", "0"))
+    week_str = week_offset_to_str(week_offset)
     start, end = get_week_range(week_offset)
 
     mates = find_mates(user, start, end)
 
     mates_html = [mate_to_html(mate) for mate in mates]
 
-    prev_week = p.a(href=f"?week={week_offset - 1}")("Previous week")
-    next_week = p.a(href=f"?week={week_offset + 1}")("Next week")
+    prev_week = p.a(href=f"?offset={week_offset - 1}")("Previous week")
+    next_week = p.a(href=f"?offset={week_offset + 1}")("Next week")
 
     return str(
         p.html(
@@ -71,6 +73,7 @@ def show_potential_mates():
                 p.h1("Your mate recommendations"),
                 p.div(
                     prev_week,
+                    week_str,
                     next_week,
                 ),
                 mates_html,

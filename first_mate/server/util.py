@@ -7,6 +7,32 @@ Utility code
 import pyhtml as p
 
 
+def week_offset_to_str(offset: int) -> str:
+    """Given a week offset, return a user-friendly display string
+
+    Parameters
+    ----------
+    offset : int
+        week offset. `0` is this week, `-1` is last week, and `1` is next week.
+
+    Returns
+    -------
+    str
+        string representing week offset.
+    """
+    match offset:
+        case -1:
+            return "Last week"
+        case 1:
+            return "Next week"
+        case n if n < -1:
+            return f"{-n} weeks ago"
+        case n if n > 1:
+            return f"{n} weeks from now"
+        case _:
+            return "This week"
+
+
 def list_to_checkboxes(
     values: list[str],
     input_name: str,
