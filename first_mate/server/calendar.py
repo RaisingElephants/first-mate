@@ -11,7 +11,7 @@ from flask import Blueprint, redirect, request
 from first_mate.logic.class_analysis import ClassEvent
 from first_mate.logic.ical_analysis import find_class_events, get_week_range
 from first_mate.server.session import get_user
-from first_mate.server.util import navbar
+from first_mate.server.util import navbar, week_offset_to_str
 
 from ..consts import LOCAL_TZ
 
@@ -40,14 +40,15 @@ def show_calendar():
     if user is None:
         return redirect("/auth/login")
 
-    week_offset = int(request.args.get("week", "0"))
+    week_offset = int(request.args.get("offset", "0"))
+    week_str = week_offset_to_str(week_offset)
     start, end = get_week_range(week_offset)
     calendar_events = find_class_events(user["calendar"], start, end)
 
     events_html = [event_to_html(event) for event in calendar_events]
 
-    prev_week = p.a(href=f"?week={week_offset - 1}")("Previous week")
-    next_week = p.a(href=f"?week={week_offset + 1}")("Next week")
+    prev_week = p.a(href=f"?offset={week_offset - 1}")("Previous week")
+    next_week = p.a(href=f"?offset={week_offset + 1}")("Next week")
 
     return str(
         p.html(
@@ -60,6 +61,7 @@ def show_calendar():
                 p.h1("Your calendar"),
                 p.div(
                     prev_week,
+                    week_str,
                     next_week,
                 ),
                 events_html,
