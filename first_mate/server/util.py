@@ -32,13 +32,13 @@ def navbar(logged_in: bool) -> p.nav:
         auth_options = [p.a(href="/auth/logout")(p.h2("Log out"))]
     else:
         auth_options = [
-            p.a(href="/auth/register")(p.h2("Register")),
-            p.a(href="/auth/login")(p.h2("Log in")),
+            p.a(href="/auth/register")(p.h2("Register",)),
+            p.a(href="/auth/login")(p.h2("Login")),
         ]
 
     # TODO: Make this only enabled in debug mode
     debug_options = [
-        p.form(action="debug/clear")(
+        p.form(action="debug/clear",class_="debug_button")(
             p.input(type="submit", value="Reset server"),
         )
     ]

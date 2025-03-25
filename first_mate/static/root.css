@@ -3,15 +3,49 @@ body {
     background-color: #0d1b2a;
     color: white;
     font-family: Arial;
+    padding-top: 100px;
+    padding-bottom: 50px;
 }
 
 h1 {
     text-align: center;
-    font-size: 2em;
     margin: 0;
-    padding: 10px;
+    padding: 0;
 }
 
+h2 {
+    display: flex;
+    font-size: 1.5em;
+    margin: 0;
+    padding: 0;
+    gap: 10px;
+    align-items: right;
+}
+.about-page {
+    margin: 50px;
+    padding-top: 20px;
+    font-size: 1.5em;
+}
+.debug_button {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin-left:auto;
+    margin-right:auto;
+    height: 10%;
+}
+.elephant {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin-left:auto;
+    margin-right:auto;
+    padding: 20px;
+    width: 40%;
+}
 form {
     background-color: #162030;
     width: 50%;
@@ -22,7 +56,7 @@ form {
     margin-left:auto;
     margin-right:auto;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 30px;
 }
 
 input {
@@ -32,16 +66,40 @@ input {
     border: none;
 }
 
-label{
-    float:left;
+label {
     margin-right: 10px;
     margin-bottom: 10px;
     padding: 5px;
+    display: inline-block;
+
 }
 
 
 nav {
     display: flex;
-    gap: 20px;
+    float: left;
+    background-color: #162030;
+    gap: 10px;
     align-items: center;
+    width: 100%;
+    position:fixed;
+    top: 0px;
+    margin: 0;
+    padding: 0;
+    border-radius: 0px;
+    height: 75px;
+}   
+
+nav a {
+    display: inline;
+    color: white;
+    text-decoration: none;
+    padding: 24px 16px;
+    border-radius: 0px;
+    margin: 0;
+    font-size: 1;
+}
+
+nav a:hover {
+    background-color: #1e2e3f;
 }
