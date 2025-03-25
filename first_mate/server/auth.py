@@ -1085,4 +1085,4 @@ def logout():
         return redirect("/")
     logout_user(session)
     clear_session()
-    return redirect("/")okay 
+    return redirect("/")
