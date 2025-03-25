@@ -208,7 +208,7 @@ def profile_banner_html(
 
     name_html = (
         p.a(href=f"/profile/{zid}?offset={link}")(display_name)
-        if link
+        if link is not None
         else p.span(display_name)
     )
 

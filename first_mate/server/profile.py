@@ -9,7 +9,7 @@ import pyhtml as p
 from flask import Blueprint, redirect, request
 
 from first_mate.logic.class_analysis import ClassEvent
-from first_mate.logic.data import save_data
+from first_mate.logic.data import get_data, save_data
 from first_mate.logic.event_overlap import MatchInfo, get_matching_times
 from first_mate.logic.ical_analysis import (
     download_ical,
@@ -107,6 +107,30 @@ def profile_page(zid: str):
     # Give edit option if it's us
     if its_me:
         edit_option = [p.a(href=f"/profile/{zid}/edit")("Edit profile")]
+
+        # List all matches with us
+        matches = [
+            user
+            for user in get_data()["users"]
+            if me["zid"] in user["likes"] and user["zid"] in me["likes"]
+        ]
+        matches_html = [
+            p.h2("Your matches"),
+            *(
+                [
+                    profile_banner_html(
+                        user["zid"],
+                        liked_you=True,
+                        you_liked=True,
+                        link=week_offset,
+                    )
+                    for user in matches
+                ]
+                if len(matches)
+                else [p.p(p.i("Nobody has matched with you yet"))]
+            ),
+        ]
+
         calendar_events = find_class_events(me["calendar"], start, end)
         calendar_html = [
             p.h2("Your calendar"),
@@ -119,6 +143,7 @@ def profile_page(zid: str):
         ]
     else:
         edit_option = []
+        matches_html = []
 
         schedule_matches = get_matching_times(me, them, start, end)
         calendar_html = [
@@ -151,6 +176,7 @@ def profile_page(zid: str):
                 navbar(True),
                 banner_html,
                 edit_option,
+                matches_html,
                 p.div(
                     prev_week,
                     week_str,
