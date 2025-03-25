@@ -35,57 +35,70 @@ def register_page():
             ),
             p.body(
                 navbar(False),
-                # p.h1("Registration"),
-                p.div(id="login-box")(
-                    p.form(
-                        p.div(_class="form-row")(
-                            p.label(for_="zid")("Your zID"),
-                            p.input(
-                                name="zid",
-                                id="zid",
-                                placeholder="z1234567",
-                                # value="z1234567",
-                                required=True,
+                p.main(
+                    p.div(id="login-box")(
+                        p.h1("Let's get you signed up"),
+                        p.form(
+                            p.div(_class="form-row")(
+                                p.label(for_="zid")("Your zID"),
+                                p.input(
+                                    type="text",
+                                    name="zid",
+                                    id="zid",
+                                    placeholder="z1234567",
+                                    # value="z1234567",
+                                    required=True,
+                                ),
                             ),
-                        ),
-                        p.div(_class="form-row")(
-                            p.label(for_="name")("Your name"),
-                            p.input(
-                                name="name",
-                                id="name",
-                                placeholder="Robin Banks",
-                                value="Robin Banks",
-                                required=True,
+                            p.div(_class="form-row")(
+                                p.label(for_="name")("Your name"),
+                                p.input(
+                                    type="text",
+                                    name="name",
+                                    id="name",
+                                    placeholder="Robin Banks",
+                                    value="Robin Banks",
+                                    required=True,
+                                ),
                             ),
-                        ),
-                        p.div(_class="form-row")(
-                            p.label(for_="password")("Your password"),
-                            p.input(
-                                type="password",
-                                name="password",
-                                id="password",
-                                placeholder="********",
-                                value="abc123ABC",
-                                required=True,
+                            p.div(_class="form-row")(
+                                p.label(for_="password")("Your password"),
+                                p.input(
+                                    type="password",
+                                    name="password",
+                                    id="password",
+                                    placeholder="********",
+                                    value="abc123ABC",
+                                    required=True,
+                                ),
                             ),
-                        ),
-                        p.div(_class="form-row")(
-                            p.label(for_="ical")("Your UNSW calendar iCal link"),
-                            p.input(
-                                type="url",
-                                name="ical",
-                                id="ical",
-                                placeholder="webcal://my.unsw.edu.au/cal/pttd/ABCDEFGHIJ.ics",
-                                value="webcal://my.unsw.edu.au/cal/pttd/ABCDEFGHIJ.ics",
-                                required=True,
+                            p.div(
+                                p.label(for_="ical")(
+                                    "Your iCal link",
+                                    p.br(),
+                                    "You can access your calendar link from the 'Student timetable' page on MyUNSW.",
+                                    p.br(),
+                                ),
+                                p.input(
+                                    type="url",
+                                    name="ical",
+                                    id="ical",
+                                    placeholder="webcal://my.unsw.edu.au/cal/pttd/ABCDEFGHIJ.ics",
+                                    value="webcal://localhost:8000/sid.ics",
+                                    required=True,
+                                ),
                             ),
-                        ),
-                        p.div(
-                            p.p("Select your degree(s)"),
-                            list_to_checkboxes(DEGREES_LIST, "degrees"),
-                        ),
-                        p.p(
-                            p.input(type="submit", value="Sign up"),
+                            p.div(
+                                p.p("Select your degree(s)"),
+                                list_to_checkboxes(DEGREES_LIST, "degrees"),
+                            ),
+                            p.p(
+                                p.input(
+                                    type="submit",
+                                    value="Sign up",
+                                    _class="btn btn-primary",
+                                ),
+                            ),
                         ),
                     ),
                 ),
@@ -127,38 +140,45 @@ def login():
     return str(
         p.html(
             p.head(
-                p.title("Login - First Mate"),
+                p.title("Login - FirstMate"),
                 p.link(href="/static/root.css", rel="stylesheet"),
                 p.link(href="/static/auth.css", rel="stylesheet"),
             ),
             p.body(
                 navbar(False),
-                p.h1("Login"),
-                p.div(id="login-box")(
-                    p.form(
-                        p.p(
-                            p.label(for_="zid")("Your zID"),
-                            p.input(
-                                name="zid",
-                                id="zid",
-                                placeholder="z1234567",
-                                value="z1234567",
+                p.main(
+                    p.div(id="login-box")(
+                        p.h1("Sign in to FirstMate"),
+                        p.form(
+                            p.div(_class="form-row")(
+                                p.label(for_="zid")("Your zID"),
+                                p.input(
+                                    type="text",
+                                    name="zid",
+                                    id="zid",
+                                    placeholder="z1234567",
+                                    value="z1234567",
+                                ),
+                            ),
+                            p.div(_class="form-row")(
+                                p.label(for_="password")("Your password"),
+                                p.input(
+                                    type="password",
+                                    name="password",
+                                    id="password",
+                                    placeholder="********",
+                                    value="abc123ABC",
+                                ),
+                            ),
+                            p.div(
+                                p.input(
+                                    type="submit",
+                                    value="Log in",
+                                    _class="btn btn-primary",
+                                ),
                             ),
                         ),
-                        p.p(
-                            p.label(for_="password")("Your password"),
-                            p.input(
-                                type="password",
-                                name="password",
-                                id="password",
-                                placeholder="********",
-                                value="abc123ABC",
-                            ),
-                        ),
-                        p.p(
-                            p.input(type="submit", value="Log in"),
-                        ),
-                    )
+                    ),
                 ),
             ),
         )
