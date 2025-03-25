@@ -63,6 +63,7 @@ def navbar(logged_in: bool) -> p.nav:
         auth_options = [
             p.a(href="/calendar")(p.h2("My calendar")),
             p.a(href="/mates")(p.h2("Find mates")),
+            p.a(href="/profile")(p.h2("My profile")),
             p.a(href="/auth/logout")(p.h2("Log out")),
         ]
     else:
