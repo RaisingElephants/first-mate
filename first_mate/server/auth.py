@@ -67,7 +67,7 @@ def register_page():
                                     type="password",
                                     name="password",
                                     id="password",
-                                    placeholder="********",
+                                    placeholder="••••••••",
                                     value="abc123ABC",
                                     required=True,
                                 ),
