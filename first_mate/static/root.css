@@ -23,7 +23,7 @@ h2 {
 }
 .about-page {
     margin: 50px;
-    padding-top: 30px;
+    padding-top: 20px;
     font-size: 1.5em;
 }
 .debug_button {
@@ -35,6 +35,16 @@ h2 {
     margin-left:auto;
     margin-right:auto;
     height: 10%;
+}
+.elephant {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin-left:auto;
+    margin-right:auto;
+    padding: 20px;
+    width: 40%;
 }
 form {
     background-color: #162030;

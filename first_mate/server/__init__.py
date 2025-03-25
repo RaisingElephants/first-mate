@@ -41,8 +41,13 @@ def root():
                     p.p(class_="about-page")
                     ("Our website aims to solve the problem that all UNSW "
                     "students face: making friends with people in their courses."),
+                    p.img(class_="elephant")( 
+                        src="https://cdn.britannica.com/02/152302-050-1A984FCB/African-savanna-elephant.jpg",
+                        alt="Elephant"),
+                    p.p(class_="about-page")
+                    ("This elephant used our website to find a friend in COMP1511. "
+                    "Now it's happy and you can be too!"),
                 )
-            
             )
         ),
     )
