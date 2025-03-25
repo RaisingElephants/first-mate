@@ -223,7 +223,7 @@ def profile_banner_html(
             )
         ]
         like_button = []
-        relationship_html = []
+        friendship_html = []
     else:
         its_you_text = []
         if you_liked:
@@ -232,14 +232,14 @@ def profile_banner_html(
                     p.input(type="submit", value="Unlike")
                 )
             ]
-            relationship_html = [p.i("Matched!")] if liked_you else []
+            friendship_html = [p.i("🎉 It's a match!")] if liked_you else []
         else:
             like_button = [
                 p.form(action=f"/mates/like/{zid}")(
                     p.input(type="submit", value="Like")
                 )
             ]
-            relationship_html = [p.i("Likes you")] if liked_you else []
+            friendship_html = [p.i("👋 Likes you!")] if liked_you else []
 
     return p.div(_class="profile-banner")(
         profile_image(zid, user_to_view["display_name"]),
@@ -247,7 +247,7 @@ def profile_banner_html(
             p.span(_class="profile-name-span")(
                 p.h2(name_html),
                 like_button,
-                relationship_html,
+                friendship_html,
             ),
             its_you_text,
             public_profile_text,
