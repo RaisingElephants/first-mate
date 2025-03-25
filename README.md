@@ -8,10 +8,15 @@ We're using `uv` as a package manager.
 
 ### Set up `.env` file for development
 
-Create a file `.env`, where you set the variable `FIRSTMATE_DEV` to `true`
+Create a file `.env`, with contents adapted from the following
 
 ```shell
+# Enable dev mode
 FIRSTMATE_DEV=true
+# Secret used for encrypting session cookie
+FIRSTMATE_SECRET="your complex secret"
+# Data directory path
+FIRSTMATE_DATA="."
 ```
 
 ### Install dependencies

@@ -73,7 +73,6 @@ def navbar(logged_in: bool) -> p.header:
             p.a("Log In", href="/auth/login", _class="btn btn-outline"),
         ]
 
-    # TODO: Make this only enabled in debug mode
     if dev():
         debug_options = [
             p.form(action="/debug/clear")(
