@@ -69,8 +69,8 @@ def navbar(logged_in: bool) -> p.nav:
         ]
     else:
         auth_options = [
-            p.a(href="/auth/register")(p.h2("Register")),
-            p.a(href="/auth/login")(p.h2("Login")),
+            p.a("Register", href="/auth/register", Class="btn btn-primary"),
+            p.a("Log In", href="/auth/login", Class="btn btn-outline"),
         ]
 
     # TODO: Make this only enabled in debug mode
