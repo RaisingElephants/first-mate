@@ -16,7 +16,7 @@ from first_mate.logic.ical_analysis import (
     find_class_events,
     get_week_range,
 )
-from first_mate.logic.user import get_user_by_zid
+from first_mate.logic.user import get_user_by_id
 from first_mate.server.session import get_user, is_user_logged_in
 from first_mate.server.util import (
     error_page,
@@ -37,7 +37,7 @@ def profile_root():
     user = get_user()
     if user is None:
         return redirect("/auth/login")
-    return redirect(f"/profile/{user['zid']}")
+    return redirect(f"/profile/{user['id']}")
 
 
 def calendar_event_to_html(ev: ClassEvent) -> p.div:
@@ -73,9 +73,9 @@ def schedule_matches_html(matches: list[MatchInfo]) -> p.div:
     return p.div(matches_html)
 
 
-@profile.get("/<zid>")
-def profile_page(zid: str):
-    them = get_user_by_zid(zid)
+@profile.get("/<int:id>")
+def profile_page(id: int):
+    them = get_user_by_id(id)
     if them is None:
         return str(
             error_page(
@@ -98,28 +98,28 @@ def profile_page(zid: str):
     week_str = f"{week_offset_to_str(week_offset)}, {start.strftime('%x')} - {end.strftime('%x')}"
 
     # We are that user
-    its_me = zid == me["zid"]
+    its_me = id == me["id"]
 
     # Whether we have matched
-    liked_you = me["zid"] in them["likes"]
-    you_liked = zid in me["likes"]
+    liked_you = me["id"] in them["likes"]
+    you_liked = id in me["likes"]
 
     # Give edit option if it's us
     if its_me:
-        edit_option = [p.a(href=f"/profile/{zid}/edit")("Edit profile")]
+        edit_option = [p.a(href=f"/profile/{id}/edit")("Edit profile")]
 
         # List all matches with us
         matches = [
             user
             for user in get_data()["users"]
-            if me["zid"] in user["likes"] and user["zid"] in me["likes"]
+            if me["id"] in user["likes"] and user["id"] in me["likes"]
         ]
         matches_html = [
             p.h2("Your matches"),
             *(
                 [
                     profile_banner_html(
-                        user["zid"],
+                        user["id"],
                         liked_you=True,
                         you_liked=True,
                         link=week_offset,
@@ -156,7 +156,7 @@ def profile_page(zid: str):
         ]
 
     banner_html = profile_banner_html(
-        zid,
+        id,
         its_you=its_me,
         liked_you=liked_you,
         you_liked=you_liked,
@@ -188,12 +188,12 @@ def profile_page(zid: str):
     )
 
 
-@profile.get("/<zid>/edit")
-def profile_edit_page(zid: str):
+@profile.get("/<int:id>/edit")
+def profile_edit_page(id: int):
     user = get_user()
     if user is None:
         return redirect("/auth/login")
-    if user["zid"] != zid:
+    if user["id"] != id:
         return str(
             error_page(
                 "Edit Profile - Error 403",
@@ -213,7 +213,7 @@ def profile_edit_page(zid: str):
             p.body(
                 navbar(True),
                 p.h1("Edit profile"),
-                profile_image(zid, user["display_name"]),
+                profile_image(user["zid"], user["display_name"]),
                 p.i("You can edit your profile picture using Gravatar"),
                 p.form(
                     # Main profile edit
@@ -253,7 +253,7 @@ def profile_edit_page(zid: str):
                     )(user["private_description"]),
                     # TODO: Degrees
                 ),
-                p.form(action=f"/profile/{zid}/edit/calendar")(
+                p.form(action=f"/profile/{id}/edit/calendar")(
                     p.label(for_="calendar-url")(p.p("Calendar URL")),
                     p.input(
                         type="url",
@@ -269,16 +269,16 @@ def profile_edit_page(zid: str):
     )
 
 
-@profile.post("/<zid>/edit")
-def profile_edit_submit(zid: str):
+@profile.post("/<int:id>/edit")
+def profile_edit_submit(id: int):
     # If save option not specified, discard changes
     if "save" not in request.form:
-        return redirect(f"/profile/{zid}")
+        return redirect(f"/profile/{id}")
 
     user = get_user()
     if user is None:
         return redirect("/auth/login")
-    if user["zid"] != zid:
+    if user["id"] != id:
         return str(
             error_page(
                 "Edit Profile - Error 403",
@@ -297,15 +297,15 @@ def profile_edit_submit(zid: str):
     user["private_description"] = private_description
     save_data()
 
-    return redirect(f"/profile/{zid}")
+    return redirect(f"/profile/{id}")
 
 
-@profile.post("/<zid>/edit/calendar")
-def profile_edit_calendar_submit(zid: str):
+@profile.post("/<int:id>/edit/calendar")
+def profile_edit_calendar_submit(id: int):
     user = get_user()
     if user is None:
         return redirect("/auth/login")
-    if user["zid"] != zid:
+    if user["id"] != id:
         return str(
             error_page(
                 "Edit Profile - Error 403",
@@ -320,4 +320,4 @@ def profile_edit_calendar_submit(zid: str):
     user["calendar"] = download_ical(calendar_url)
     save_data()
 
-    return redirect(f"/profile/{zid}")
+    return redirect(f"/profile/{id}")

@@ -39,8 +39,8 @@ class MatchInfo(TypedDict):
 
 
 class Mate(TypedDict):
-    zid: str
-    """zID of mate"""
+    id: int
+    """User ID of mate"""
     matches: list[MatchInfo]
     """List of matches"""
 
@@ -187,7 +187,7 @@ def find_mates(
     mates: list[Mate] = []
 
     for other_user in get_data()["users"]:
-        if other_user["zid"] == me["zid"]:
+        if other_user["id"] == me["id"]:
             # Can't match with self
             continue
         matching_times = get_matching_times(me, other_user, start, end)
@@ -195,7 +195,7 @@ def find_mates(
             # Add them to the list of potential mates
             mates.append(
                 {
-                    "zid": other_user["zid"],
+                    "id": other_user["id"],
                     "matches": matching_times,
                 }
             )

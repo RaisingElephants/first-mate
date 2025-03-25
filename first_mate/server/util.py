@@ -10,7 +10,7 @@ import random
 
 import pyhtml as p
 
-from first_mate.logic.user import get_user_by_zid
+from first_mate.logic.user import get_user_by_id
 
 
 def week_offset_to_str(offset: int) -> str:
@@ -158,7 +158,7 @@ def profile_image(zid: str, username: str) -> p.img:
 
 
 def profile_banner_html(
-    zid: str,
+    id: int,
     *,
     you_liked: bool = False,
     liked_you: bool = False,
@@ -169,8 +169,8 @@ def profile_banner_html(
 
     Parameters
     ----------
-    zid : str
-        zID of profile to generate
+    id : int
+        ID of profile to generate
     you_liked : bool
         Whether you liked this user
     liked_you : bool
@@ -186,7 +186,7 @@ def profile_banner_html(
     p.div
         HTML for profile banner
     """
-    user_to_view = get_user_by_zid(zid)
+    user_to_view = get_user_by_id(id)
     assert user_to_view is not None
 
     public_profile_text = p.div(_class="profile-description")(
@@ -196,7 +196,8 @@ def profile_banner_html(
     )
 
     if you_liked and liked_you:
-        display_name = f"{user_to_view['display_name']} - {zid}"
+        # For matches, display zIDs
+        display_name = f"{user_to_view['display_name']} - {user_to_view['zid']}"
         private_profile_text = p.div(_class="profile-description")(
             [multiline_str_to_html(user_to_view["private_description"])]
             if user_to_view["private_description"]
@@ -207,7 +208,7 @@ def profile_banner_html(
         private_profile_text = []
 
     name_html = (
-        p.a(href=f"/profile/{zid}?offset={link}")(display_name)
+        p.a(href=f"/profile/{id}?offset={link}")(display_name)
         if link is not None
         else p.span(display_name)
     )
@@ -228,21 +229,19 @@ def profile_banner_html(
         its_you_text = []
         if you_liked:
             like_button = [
-                p.form(action=f"/mates/unlike/{zid}")(
+                p.form(action=f"/mates/unlike/{id}")(
                     p.input(type="submit", value="Unlike")
                 )
             ]
             friendship_html = [p.i("🎉 It's a match!")] if liked_you else []
         else:
             like_button = [
-                p.form(action=f"/mates/like/{zid}")(
-                    p.input(type="submit", value="Like")
-                )
+                p.form(action=f"/mates/like/{id}")(p.input(type="submit", value="Like"))
             ]
             friendship_html = [p.i("👋 Likes you!")] if liked_you else []
 
     return p.div(_class="profile-banner")(
-        profile_image(zid, user_to_view["display_name"]),
+        profile_image(user_to_view["zid"], user_to_view["display_name"]),
         p.div(_class="profile-banner-inner")(
             p.span(_class="profile-name-span")(
                 p.h2(name_html),
