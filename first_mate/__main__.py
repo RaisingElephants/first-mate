@@ -3,11 +3,15 @@ first-mate
 
 Find yourself some friends on campus at UNSW.
 """
-import logging
-from .server import app
+
+import dotenv
+dotenv.load_dotenv()
+
+from .server import app  # noqa: E402
+
 
 def main():
-    logging.basicConfig(level="DEBUG")
+    # logging.basicConfig(level="DEBUG")
     app.run()
 
 

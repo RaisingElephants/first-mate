@@ -10,6 +10,7 @@ import random
 
 import pyhtml as p
 
+from first_mate.consts import dev
 from first_mate.logic.user import get_user_by_id
 
 
@@ -73,11 +74,14 @@ def navbar(logged_in: bool) -> p.header:
         ]
 
     # TODO: Make this only enabled in debug mode
-    debug_options = [
-        p.form(action="/debug/clear")(
-            p.input(type="submit", value="Reset server", _class="btn btn-debug"),
-        )
-    ]
+    if dev():
+        debug_options = [
+            p.form(action="/debug/clear", _class="debug_button")(
+                p.input(type="submit", value="Reset server"),
+            )
+        ]
+    else:
+        debug_options = []
 
     return p.header(_class="sticky-header")(
         p.div(_class="container")(

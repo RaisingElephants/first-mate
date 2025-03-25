@@ -7,6 +7,7 @@ Entrypoint to the first-mate server.
 import os
 from flask import Flask, send_file
 
+from first_mate.consts import dev
 from first_mate.server.landing import render_page
 
 from .session import is_user_logged_in
@@ -23,9 +24,11 @@ app = Flask(__name__)
 app.secret_key = "top secret key"
 
 app.register_blueprint(auth, url_prefix="/auth")
-app.register_blueprint(debug, url_prefix="/debug")
 app.register_blueprint(mates, url_prefix="/mates")
 app.register_blueprint(profile, url_prefix="/profile")
+
+if dev():
+    app.register_blueprint(debug, url_prefix="/debug")
 
 
 @app.get("/")
