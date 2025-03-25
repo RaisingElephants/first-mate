@@ -6,10 +6,10 @@ Server code for calendar work
 
 from datetime import datetime
 import pyhtml as p
-from flask import Blueprint, redirect
+from flask import Blueprint, redirect, request
 
 from first_mate.logic.class_analysis import ClassEvent
-from first_mate.logic.ical_analysis import find_class_events
+from first_mate.logic.ical_analysis import find_class_events, get_week_range
 from first_mate.server.session import get_user
 from first_mate.server.util import navbar
 
@@ -40,12 +40,14 @@ def show_calendar():
     if user is None:
         return redirect("/auth/login")
 
-    # TODO: Determine these from form input
-    start = datetime(2025, 3, 1)
-    end = datetime.now()
+    week_offset = int(request.args.get("week", "0"))
+    start, end = get_week_range(week_offset)
     calendar_events = find_class_events(user["calendar"], start, end)
 
     events_html = [event_to_html(event) for event in calendar_events]
+
+    prev_week = p.a(href=f"?week={week_offset - 1}")("Previous week")
+    next_week = p.a(href=f"?week={week_offset + 1}")("Next week")
 
     return str(
         p.html(
@@ -56,6 +58,10 @@ def show_calendar():
             p.body(
                 navbar(True),
                 p.h1("Your calendar"),
+                p.div(
+                    prev_week,
+                    next_week,
+                ),
                 events_html,
             ),
         )

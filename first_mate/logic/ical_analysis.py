@@ -48,11 +48,11 @@ def create_event_hash(event):
     return hashlib.md5(signature.encode()).hexdigest()
 
 
-def get_week_range() -> tuple[datetime, datetime]:
+def get_week_range(week_offset: int = 0) -> tuple[datetime, datetime]:
     """
     Returns the start and end times for this week.
     """
-    now = datetime.now(LOCAL_TZ)
+    now = datetime.now(LOCAL_TZ) + timedelta(days=week_offset * 7)
     start_of_week = now - timedelta(days=now.weekday())
     start_of_week = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
     end_of_week = start_of_week + timedelta(days=6, hours=23, minutes=59, seconds=59)

@@ -6,9 +6,10 @@ Server code for calendar work
 
 from datetime import datetime
 import pyhtml as p
-from flask import Blueprint, redirect
+from flask import Blueprint, redirect, request
 
 from first_mate.logic.event_overlap import MatchInfo, Mate, find_mates
+from first_mate.logic.ical_analysis import get_week_range
 from first_mate.logic.user import get_user_by_zid
 from first_mate.server.session import get_user
 from first_mate.server.util import navbar
@@ -48,13 +49,16 @@ def show_potential_mates():
     if user is None:
         return redirect("/auth/login")
 
-    # TODO: Determine these from form input
-    start = datetime(2025, 3, 1)
-    end = datetime.now()
+
+    week_offset = int(request.args.get("week", "0"))
+    start, end = get_week_range(week_offset)
 
     mates = find_mates(user, start, end)
 
     mates_html = [mate_to_html(mate) for mate in mates]
+
+    prev_week = p.a(href=f"?week={week_offset - 1}")("Previous week")
+    next_week = p.a(href=f"?week={week_offset + 1}")("Next week")
 
     return str(
         p.html(
@@ -65,6 +69,10 @@ def show_potential_mates():
             p.body(
                 navbar(True),
                 p.h1("Your mate recommendations"),
+                p.div(
+                    prev_week,
+                    next_week,
+                ),
                 mates_html,
             ),
         )
