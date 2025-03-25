@@ -200,4 +200,5 @@ def find_mates(
                 }
             )
 
-    return mates
+    # Sort by length of "matches" value, from high to low
+    return sorted(mates, key=lambda mate: len(mate["matches"]), reverse=True)
