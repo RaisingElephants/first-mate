@@ -9,24 +9,24 @@ def generate_head() -> head:
         meta(charset="UTF-8"),
         meta(name="viewport", content="width=device-width, initial-scale=1.0"),
         title("FirstMate - Find Friends on Campus"),
-        link(rel="stylesheet", href="/static/styles.css")
+        link(rel="stylesheet", href="/static/landing.css"),
     )
     
 def generate_cta() -> section:
     return section(
         div(
             div(
-                h2("Ready to make new friends on campus?", Class="section-title"),
-                p("Join thousands of students who are already connecting and building friendships.", Class="section-description"),
-                Class="section-header"
+                h2("Ready to make new friends on campus?", _class="section-title"),
+                p("Join thousands of students who are already connecting and building friendships.", _class="section-description"),
+                _class="section-header"
             ),
             div(
-                a("Sign Up Now", href="/auth/register", Class="btn btn-primary btn-lg"),
-                Class="cta-buttons"
+                a("Sign Up Now", href="/auth/register", _class="btn btn-primary btn-lg"),
+                _class="cta-buttons"
             ),
-            Class="container"
+            _class="container"
         ),
-        Class="cta-section"
+        _class="cta-section"
 )
 
 def generate_footer() -> footer:
@@ -34,9 +34,9 @@ def generate_footer() -> footer:
         div(
             div(
                 a(div(
-                    img(src="/static/firstmate-logo.png", alt="FirstMate logo", Class="logo-icon-small"),
-                    span("FirstMate", Class="logo-text-small"),
-                    Class="footer-logo"
+                    img(src="/static/firstmate-logo.png", alt="FirstMate logo", _class="logo-icon-small"),
+                    span("FirstMate", _class="logo-text-small"),
+                    _class="footer-logo"
                 ),
                 href="/",
                 title="Return to Homepage"),
@@ -44,19 +44,19 @@ def generate_footer() -> footer:
                     "© ",
                     script("document.write(new Date().getFullYear())"),
                     "-FirstMate. All rights reserved.",
-                    Class="copyright"
+                    _class="copyright"
                 ),
                 div(
-                    a("Terms", href="/terms", Class="footer-link"),
-                    a("Privacy", href="/privacy", Class="footer-link"),
-                    a("Contact", href="/contact", Class="footer-link"),
-                    Class="footer-links"
+                    a("Terms", href="/terms", _class="footer-link"),
+                    a("Privacy", href="/privacy", _class="footer-link"),
+                    a("Contact", href="/contact", _class="footer-link"),
+                    _class="footer-links"
                 ),
-                Class="footer-content"
+                _class="footer-content"
             ),
-            Class="container"
+            _class="container"
         ),
-        Class="site-footer"
+        _class="site-footer"
     )
 
 
@@ -64,31 +64,31 @@ def generate_header(logged_in: bool) -> header:
     return header(
         div(
             navbar(logged_in),
-            Class="container"
+            _class="container"
         ),
-        Class="sticky-header"
+        _class="sticky-header"
     )
 
 def generate_hero() -> section:
     return section(
         div(
             div(
-                h1("Find Friends on Campus", Class="hero-title"),
-                p("Connect with students who share your interests, classes, and hangout spots.", Class="hero-description"),
+                h1("Find Friends on Campus", _class="hero-title"),
+                p("Connect with students who share your interests, classes, and hangout spots.", _class="hero-description"),
                 div(
-                    a("Get Started", href="/auth/register", Class="btn btn-primary btn-lg"),
-                    a("Learn More", href="#how-it-works", Class="btn btn-outline btn-lg"),
-                    Class="hero-buttons"
+                    a("Get Started", href="/auth/register", _class="btn btn-primary btn-lg"),
+                    a("Learn More", href="#how-it-works", _class="btn btn-outline btn-lg"),
+                    _class="hero-buttons"
                 ),
-                Class="hero-content"
+                _class="hero-content"
             ),
             div(
-                img(src="/static/friends.webp", alt="Students connecting on campus", Class="rounded-image"),
-                Class="hero-image"
+                img(src="/static/friends.webp", alt="Students connecting on campus", _class="rounded-image"),
+                _class="hero-image"
             ),
-            Class="hero-grid"
+            _class="hero-grid"
         ),
-        Class="hero-section"
+        _class="hero-section"
     )
 
 def generate_body(logged_in: bool) -> body:
@@ -101,10 +101,10 @@ def generate_body(logged_in: bool) -> body:
                 generate_how_it_works(),
                 generate_testimonials(),
                 generate_cta(),
-                Class="flex-1"
+                _class="flex-1"
             ),
             generate_footer(),
-            Class="flex min-h-screen flex-col"
+            _class="flex min-h-screen flex-col"
         )
     )
     
