@@ -81,9 +81,6 @@ def navbar(logged_in: bool) -> p.nav:
 
     return p.nav(
         generate_logo(),
-        p.a("Features", href="#features", _class="nav-link"),
-        p.a("How It Works", href="#how-it-works", _class="nav-link"),
-        p.a("Testimonials", href="#testimonials", _class="nav-link"),
         auth_options,
         debug_options,
         _class="main-nav",

@@ -31,7 +31,6 @@ app.register_blueprint(profile, url_prefix="/profile")
 @app.get("/")
 def root():
     logged_in = is_user_logged_in()
-    print(f"{logged_in=}")
     return render_page(logged_in)
 
 
