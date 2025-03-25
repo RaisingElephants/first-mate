@@ -57,7 +57,19 @@ def show_potential_mates():
 
     mates = find_mates(user, start, end)
 
-    mates_html = [mate_to_html(mate) for mate in mates]
+    mates_html = (
+        [mate_to_html(mate) for mate in mates]
+        if len(mates)
+        else [
+            p.p(p.i("No mates this week. Try checking another week")),
+            p.img(
+                src="/static/no-bitches.jpg",
+                alt="No bitches meme",
+                width="100%",
+                height="400px",
+            ),
+        ]
+    )
 
     prev_week = p.a(href=f"?offset={week_offset - 1}")("Previous week")
     next_week = p.a(href=f"?offset={week_offset + 1}")("Next week")
