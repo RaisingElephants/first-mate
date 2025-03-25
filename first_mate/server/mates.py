@@ -25,8 +25,11 @@ def match_to_html(match: MatchInfo) -> p.div:
     time_str = datetime.fromtimestamp(match["time"], LOCAL_TZ).strftime("%c")
 
     return p.div(
-        p.p(f"{timing} {match['class_description']}"),
-        p.p(f"At {time_str}"),
+        p.p(
+            f"{timing} {match['class_description']}",
+            p.br(),
+            f"At {time_str}",
+        )
     )
 
 
@@ -64,6 +67,7 @@ def show_potential_mates():
         if len(mates)
         else [
             p.p(p.i("No mates this week. Try checking another week")),
+            # FIXME: If we're not feeling edgy, remove this image
             p.img(
                 src="/static/no-bitches.jpg",
                 alt="No bitches meme",
