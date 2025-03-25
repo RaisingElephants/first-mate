@@ -29,10 +29,14 @@ def list_to_checkboxes(
 
 def navbar(logged_in: bool) -> p.nav:
     if logged_in:
-        auth_options = [p.a(href="/auth/logout")(p.h2("Log out"))]
+        auth_options = [
+            p.a(href="/calendar")(p.h2("My calendar")),
+            p.a(href="/mates")(p.h2("Find mates")),
+            p.a(href="/auth/logout")(p.h2("Log out")),
+        ]
     else:
         auth_options = [
-            p.a(href="/auth/register")(p.h2("Register",)),
+            p.a(href="/auth/register")(p.h2("Register")),
             p.a(href="/auth/login")(p.h2("Login")),
         ]
 

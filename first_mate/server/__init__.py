@@ -13,6 +13,7 @@ from .util import navbar
 from .auth import auth
 from .calendar import calendar
 from .debug import debug
+from .mates import mates
 
 
 app = Flask(__name__)
@@ -24,6 +25,7 @@ app.secret_key = "top secret key"
 app.register_blueprint(auth, url_prefix="/auth")
 app.register_blueprint(calendar, url_prefix="/calendar")
 app.register_blueprint(debug, url_prefix="/debug")
+app.register_blueprint(mates, url_prefix="/mates")
 
 
 @app.get("/")
@@ -34,7 +36,6 @@ def root():
             p.head(
                 p.title("First-mate"),
                 p.link(href="/static/root.css", rel="stylesheet"),
-
             ),
             p.body(
                 navbar(logged_in),
