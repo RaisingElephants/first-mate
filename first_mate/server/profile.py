@@ -8,9 +8,14 @@ from datetime import datetime
 import pyhtml as p
 from flask import Blueprint, redirect, request
 
+from first_mate.logic.class_analysis import ClassEvent
 from first_mate.logic.data import save_data
 from first_mate.logic.event_overlap import MatchInfo, get_matching_times
-from first_mate.logic.ical_analysis import download_ical, get_week_range
+from first_mate.logic.ical_analysis import (
+    download_ical,
+    find_class_events,
+    get_week_range,
+)
 from first_mate.logic.user import get_user_by_zid
 from first_mate.server.session import get_user, is_user_logged_in
 from first_mate.server.util import (
@@ -33,6 +38,20 @@ def profile_root():
     if user is None:
         return redirect("/auth/login")
     return redirect(f"/profile/{user['zid']}")
+
+
+def calendar_event_to_html(ev: ClassEvent) -> p.div:
+    start_dt = datetime.fromtimestamp(ev["start"], LOCAL_TZ)
+    end_dt = datetime.fromtimestamp(ev["end"], LOCAL_TZ)
+
+    start_str = start_dt.strftime("%c")
+    end_str = end_dt.strftime("%X")
+
+    return p.div(_class="calendar-event")(
+        p.h2(f"{ev['course_code']} {ev['class_type']}"),
+        p.p(f"{start_str} - {end_str}"),
+        p.p(ev["location"]),
+    )
 
 
 def match_to_html(match: MatchInfo) -> p.div:
@@ -88,7 +107,16 @@ def profile_page(zid: str):
     # Give edit option if it's us
     if its_me:
         edit_option = [p.a(href=f"/profile/{zid}/edit")("Edit profile")]
-        calendar_html = []
+        calendar_events = find_class_events(me["calendar"], start, end)
+        calendar_html = [
+            p.h2("Your calendar"),
+            p.p("Your calendar is not shown to other users"),
+            *(
+                [calendar_event_to_html(event) for event in calendar_events]
+                if len(calendar_events)
+                else [p.i("Your don't have any events this week.")]
+            ),
+        ]
     else:
         edit_option = []
 

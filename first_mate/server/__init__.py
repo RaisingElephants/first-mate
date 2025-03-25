@@ -11,7 +11,6 @@ from flask import Flask, send_file
 from .session import is_user_logged_in
 from .util import navbar
 from .auth import auth
-from .calendar import calendar
 from .debug import debug
 from .mates import mates
 from .profile import profile
@@ -24,7 +23,6 @@ app = Flask(__name__)
 app.secret_key = "top secret key"
 
 app.register_blueprint(auth, url_prefix="/auth")
-app.register_blueprint(calendar, url_prefix="/calendar")
 app.register_blueprint(debug, url_prefix="/debug")
 app.register_blueprint(mates, url_prefix="/mates")
 app.register_blueprint(profile, url_prefix="/profile")
