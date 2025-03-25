@@ -1,6 +1,7 @@
 from datetime import datetime
 import pyhtml as p
 
+from first_mate.server.landing.bg_animation import generate_bg_animation
 from first_mate.server.landing.features_section import generate_features
 from first_mate.server.landing.how_it_works_testimonials_section import (
     generate_how_it_works,
@@ -16,6 +17,8 @@ def generate_head() -> p.head:
         p.title("FirstMate - Find Friends on Campus"),
         p.link(rel="stylesheet", href="/static/root.css"),
         p.link(rel="stylesheet", href="/static/landing.css"),
+        p.link(rel="stylesheet", href="/static/animation.css"),
+
     )
 
 
@@ -110,6 +113,9 @@ def generate_hero(logged_in: bool) -> p.section:
 
 def generate_body(logged_in: bool) -> p.body:
     return p.body(
+        p.canvas(id="animation-canvas", _class="background-animation"),
+        generate_bg_animation(),
+
         p.div(_class="flex min-h-screen flex-col")(
             navbar(logged_in),
             p.main(_class="flex-1")(

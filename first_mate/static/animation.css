@@ -1,0 +1,358 @@
+/* animation.css */
+:root {
+    --brand-orange: #fca33b;
+    --brand-red: #f55e40;
+    --brand-blue: #6991bd;
+    --brand-beige: #ddcfbe;
+    --brand-brown: #302520;
+    
+    /* Override default colors with brand colors */
+    --primary: #fca33b;
+    --primary-foreground: #ffffff;
+  }
+  
+  /* ===== BACKGROUND ANIMATION ===== */
+  
+  /* Canvas background animation */
+  .background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.7;
+    cursor: default;
+  }
+
+
+  /* Canvas background animation */
+  .background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.2;
+  }
+  
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background-color: var(--brand-orange);
+    z-index: 9999;
+    width: 0%;
+    transition: width 0.1s ease;
+  }
+  
+  /* ===== ELEMENT ANIMATIONS ===== */
+  
+  /* Button animations */
+  .btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .btn::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform 0.5s, opacity 0.8s;
+  }
+  
+  .btn:active::after {
+    transform: scale(0, 0);
+    opacity: 0.3;
+    transition: 0s;
+  }
+  
+  .btn-primary {
+    background-color: var(--brand-orange);
+    border-color: var(--brand-orange);
+    box-shadow: 0 4px 6px rgba(252, 163, 59, 0.1);
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 14px rgba(252, 163, 59, 0.2);
+  }
+  
+  .btn-primary:active {
+    transform: translateY(1px);
+  }
+  
+  .btn-outline:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 14px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Hero image animation */
+  .hero-image {
+    position: relative;
+    transition: all 0.5s ease;
+  }
+  
+  .rounded-image {
+    transition: all 0.5s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .hero-image:hover .rounded-image {
+    transform: scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Feature card animations */
+  .feature-card {
+    transition: all 0.3s ease;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transform: translateY(0);
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 20px rgba(252, 163, 59, 0.15);
+    border-color: var(--brand-orange);
+  }
+  
+  .feature-icon-wrapper {
+    background-color: rgba(252, 163, 59, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .feature-card:hover .feature-icon-wrapper {
+    transform: scale(1.1);
+    background-color: rgba(252, 163, 59, 0.2);
+  }
+  
+  /* Step card animations */
+  .step-card {
+    transition: all 0.3s ease;
+  }
+  
+  .step-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .step-number {
+    background-color: var(--brand-orange);
+    transition: all 0.3s ease;
+  }
+  
+  .step-card:hover .step-number {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(252, 163, 59, 0.5);
+  }
+  
+  /* Testimonial card animations */
+  .testimonial-card {
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  .testimonial-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 20px rgba(105, 145, 189, 0.15);
+    border-color: var(--brand-blue);
+  }
+  
+  .author-avatar {
+    transition: all 0.3s ease;
+    background-color: rgba(252, 163, 59, 0.1);
+  }
+  
+  .testimonial-card:hover .author-avatar {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(252, 163, 59, 0.3);
+  }
+  
+  /* Badge animation */
+  .badge {
+    background-color: var(--brand-orange);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .badge::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      to bottom right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(45deg);
+    animation: shimmer 3s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%) rotate(45deg);
+    }
+    100% {
+      transform: translateX(100%) rotate(45deg);
+    }
+  }
+  
+  /* Footer link animations */
+  .footer-link {
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  
+  .footer-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--brand-orange);
+    transition: width 0.3s ease;
+  }
+  
+  .footer-link:hover {
+    color: var(--brand-orange);
+  }
+  
+  .footer-link:hover::after {
+    width: 100%;
+  }
+  
+  /* Logo animation */
+  .footer-logo {
+    transition: all 0.3s ease;
+  }
+  
+  .footer-logo:hover {
+    transform: scale(1.05);
+  }
+  
+  .logo-icon-small {
+    transition: all 0.3s ease;
+  }
+  
+  .footer-logo:hover .logo-icon-small {
+    transform: rotate(10deg);
+  }
+  
+  /* Fade-in animation for elements */
+  .fade-in {
+    animation: fadeIn 0.8s ease forwards;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Header animation */
+  .sticky-header {
+    transition: all 0.3s ease;
+  }
+  
+  .sticky-header.scrolled {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* CTA section animation */
+  .cta-section {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(var(--brand-orange) 1px, transparent 1px),
+      radial-gradient(var(--brand-blue) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: 0 0, 20px 20px;
+    opacity: 0.05;
+    z-index: -1;
+  }
+
+
+.hero-section {
+    margin: 0;
+    padding: 2rem 3rem;
+}
+
+.hero-grid {
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Increase font sizes */
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.hero-description {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Fix hero image hover effect */
+.hero-image::before {
+    content: none;
+}
+
+.hero-image:hover .rounded-image {
+    transform: scale(1.03);
+    box-shadow: 0 15px 30px rgba(252, 163, 59, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* Logo animation */
+.logo-icon-small {
+    transition: transform 0.3s ease;
+}
+
+.footer-logo:hover .logo-icon-small {
+    transform: rotate(20deg) scale(1.2);
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+    .hero-title {
+        font-size: 4rem;
+    }
+    
+    .hero-description {
+        font-size: 1.75rem;
+    }
+}
