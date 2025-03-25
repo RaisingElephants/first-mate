@@ -36,7 +36,7 @@ def download_ical(url: str) -> str:
     str
         ical string
     """
-    response = requests.get(url)
+    response = requests.get(convert_webcal_to_https(url))
     response.raise_for_status()
     return response.text
 

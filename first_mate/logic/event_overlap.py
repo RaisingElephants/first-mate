@@ -162,8 +162,11 @@ def find_mates(
     criteria:
 
     * Both users are free before the event and events start at the same time,
-      or.
-    * Both users are free after the event and events end at the same time
+    * Or, both users are free after the event and events end at the same time.
+
+    Other strategies to consider:
+    * Both have at around an hour, with one person's class finishing, then the
+      other's class starting an hour later (not implemented).
 
     Matches are sorted based on distance between their event locations (TODO).
 
