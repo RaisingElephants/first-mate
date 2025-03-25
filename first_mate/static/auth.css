@@ -1,0 +1,32 @@
+/*
+auth.css
+
+CSS for auth pages
+*/
+
+form {
+    background-color: #162030;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    border-radius: 30px;
+}
+
+input {
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+}
+
+.form-row {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    margin: 10px;
+}
