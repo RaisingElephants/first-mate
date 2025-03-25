@@ -21,45 +21,55 @@ h2 {
     gap: 10px;
     align-items: right;
 }
+
 .about-page {
     margin: 50px;
     padding-top: 20px;
     font-size: 1.5em;
 }
+
 .debug_button {
     width: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: auto;
+    margin-right: auto;
     height: 10%;
 }
+
 .introduction {
     display: flex;
     align-items: center;
     flex-direction: column;
 }
+
 .elephant {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: auto;
+    margin-right: auto;
     padding: 20px;
     width: 40%;
 }
+
 form {
     background-color: #162030;
     width: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    /*
+        FIXME: Yucky values cause issues for other content
+        We should split CSS only used on specific pages to be in separate CSS
+        files and keep root.css to be global styles.
+    */
     margin-top: 20px;
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: auto;
+    margin-right: auto;
     padding: 20px;
     border-radius: 30px;
 }
@@ -71,12 +81,11 @@ input {
     border: none;
 }
 
-label {
-    margin-right: 10px;
-    margin-bottom: 10px;
-    padding: 5px;
-    display: inline-block;
-
+.form-row {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    margin: 10px;
 }
 
 
@@ -87,7 +96,7 @@ nav {
     gap: 10px;
     align-items: center;
     width: 100%;
-    position:fixed;
+    position: fixed;
     top: 0px;
     margin: 0;
     padding: 0;
@@ -107,4 +116,29 @@ nav a {
 
 nav a:hover {
     background-color: #1e2e3f;
+}
+
+.profile-banner {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.profile-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 100px;
+}
+
+.profile-description {
+    margin: 15px 0;
+}
+
+.profile-edit-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
 }

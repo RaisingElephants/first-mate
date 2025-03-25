@@ -12,7 +12,7 @@ from first_mate.logic.event_overlap import MatchInfo, Mate, find_mates
 from first_mate.logic.ical_analysis import get_week_range
 from first_mate.logic.user import get_user_by_zid
 from first_mate.server.session import get_user
-from first_mate.server.util import navbar, week_offset_to_str
+from first_mate.server.util import navbar, profile_banner_html, week_offset_to_str
 
 from ..consts import LOCAL_TZ
 
@@ -25,8 +25,11 @@ def match_to_html(match: MatchInfo) -> p.div:
     time_str = datetime.fromtimestamp(match["time"], LOCAL_TZ).strftime("%c")
 
     return p.div(
-        p.p(f"{timing} {match['class_description']}"),
-        p.p(f"At {time_str}"),
+        p.p(
+            f"{timing} {match['class_description']}",
+            p.br(),
+            f"At {time_str}",
+        )
     )
 
 
@@ -37,7 +40,9 @@ def mate_to_html(mate: Mate) -> p.div:
     matches_html = [match_to_html(match) for match in mate["matches"]]
 
     return p.div(
-        p.h2(their_profile["display_name"]),
+        # FIXME: Update this if matched
+        profile_banner_html(mate["zid"], matched=False, link=True),
+        p.p("Not matched yet"),
         matches_html,
     )
 
@@ -52,12 +57,25 @@ def show_potential_mates():
     # NOTE: Week offset is duplicated with /calendar, perhaps use helper
     # function?
     week_offset = int(request.args.get("offset", "0"))
-    week_str = week_offset_to_str(week_offset)
     start, end = get_week_range(week_offset)
+    week_str = f"{week_offset_to_str(week_offset)}, {start.strftime('%x')} - {end.strftime('%x')}"
 
     mates = find_mates(user, start, end)
 
-    mates_html = [mate_to_html(mate) for mate in mates]
+    mates_html = (
+        [mate_to_html(mate) for mate in mates]
+        if len(mates)
+        else [
+            p.p(p.i("No mates this week. Try checking another week")),
+            # FIXME: If we're not feeling edgy, remove this image
+            p.img(
+                src="/static/no-bitches.jpg",
+                alt="No bitches meme",
+                width="100%",
+                height="400px",
+            ),
+        ]
+    )
 
     prev_week = p.a(href=f"?offset={week_offset - 1}")("Previous week")
     next_week = p.a(href=f"?offset={week_offset + 1}")("Next week")

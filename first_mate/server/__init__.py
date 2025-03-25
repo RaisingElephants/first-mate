@@ -14,6 +14,7 @@ from .auth import auth
 from .calendar import calendar
 from .debug import debug
 from .mates import mates
+from .profile import profile
 
 
 app = Flask(__name__)
@@ -26,6 +27,7 @@ app.register_blueprint(auth, url_prefix="/auth")
 app.register_blueprint(calendar, url_prefix="/calendar")
 app.register_blueprint(debug, url_prefix="/debug")
 app.register_blueprint(mates, url_prefix="/mates")
+app.register_blueprint(profile, url_prefix="/profile")
 
 
 @app.get("/")
@@ -41,17 +43,20 @@ def root():
                 navbar(logged_in),
                 p.h1("First Mate - Raising Elephants"),
                 p.div(class_="introduction")(
-                    p.p(class_="about-page")
-                    ("Our website aims to solve the problem that all UNSW "
-                    "students face: making friends with people in their courses."),
+                    p.p(class_="about-page")(
+                        "Our website aims to solve the problem that all UNSW "
+                        "students face: making friends with people in their courses."
+                    ),
                     p.img(class_="elephant")(
                         src="https://cdn.britannica.com/02/152302-050-1A984FCB/African-savanna-elephant.jpg",
-                        alt="Elephant"),
-                    p.p(class_="about-page")
-                    ("This elephant used our website to find a friend in COMP1511. "
-                    "Now it's happy and you can be too!"),
-                )
-            )
+                        alt="Elephant",
+                    ),
+                    p.p(class_="about-page")(
+                        "This elephant used our website to find a friend in COMP1511. "
+                        "Now it's happy and you can be too!"
+                    ),
+                ),
+            ),
         ),
     )
 

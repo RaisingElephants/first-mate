@@ -27,6 +27,12 @@ class User(TypedDict):
     display_name: str
     """Display name, shown to other users"""
 
+    public_description: str
+    """Public profile text, shown under name"""
+
+    private_description: str
+    """Private profile text, only shown to users who have been matched with"""
+
     password_hash: str
     """Hash for user's password"""
 
@@ -131,6 +137,8 @@ def register_user(
     user_data: User = {
         "zid": zid,
         "display_name": display_name,
+        "public_description": "",
+        "private_description": "",
         "password_hash": hashed,
         "password_salt": salt,
         "calendar": download_ical(ical_url),

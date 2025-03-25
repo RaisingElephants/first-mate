@@ -41,11 +41,15 @@ def show_calendar():
         return redirect("/auth/login")
 
     week_offset = int(request.args.get("offset", "0"))
-    week_str = week_offset_to_str(week_offset)
     start, end = get_week_range(week_offset)
+    week_str = f"{week_offset_to_str(week_offset)}, {start.strftime('%x')} - {end.strftime('%x')}"
     calendar_events = find_class_events(user["calendar"], start, end)
 
-    events_html = [event_to_html(event) for event in calendar_events]
+    events_html = (
+        [event_to_html(event) for event in calendar_events]
+        if len(calendar_events)
+        else [p.p(p.i("No events this week"))]
+    )
 
     prev_week = p.a(href=f"?offset={week_offset - 1}")("Previous week")
     next_week = p.a(href=f"?offset={week_offset + 1}")("Next week")
