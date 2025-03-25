@@ -63,7 +63,7 @@ def determine_event_type(summary: str, description: str) -> str | None:
     text = f"{summary} {description}".lower()
 
     mappings = {
-        "Lecture": ["lect", "sem"],
+        "Lecture": ["lec", "sem"],
         "Tutorial": ["tut"],
         "Lab": ["lab"],
         "Exam": ["exam", "test", "quiz", "assessment"],
@@ -107,14 +107,14 @@ def event_to_class_info(
     ClassEvent | None
         ClassEvent dict if parsing succeeds, otherwise None
     """
-    # Reject events where we can't find a course code
+    # If we can't find a course code, label it as an out of school event
     course_code = extract_course_code(summary)
     if not course_code:
-        return None
+        course_code = "Personal Commitment: "
 
     class_type = determine_event_type(summary, description)
     if not class_type:
-        return None
+        class_type = summary
 
     return {
         "course_code": course_code,
