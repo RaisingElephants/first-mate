@@ -50,7 +50,7 @@ def show_potential_mates():
         return redirect("/auth/login")
 
 
-    week_offset = int(request.args.get("week", "1"))
+    week_offset = int(request.args.get("week", "0"))
     start, end = get_week_range(week_offset)
 
     mates = find_mates(user, start, end)

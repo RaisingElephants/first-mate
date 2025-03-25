@@ -40,7 +40,7 @@ def show_calendar():
     if user is None:
         return redirect("/auth/login")
 
-    week_offset = int(request.args.get("week", "1"))
+    week_offset = int(request.args.get("week", "0"))
     start, end = get_week_range(week_offset)
     calendar_events = find_class_events(user["calendar"], start, end)
 
