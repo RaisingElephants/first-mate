@@ -25,7 +25,7 @@ def generate_cta(logged_in: bool) -> p.section:
             p.div(_class="section-header")(
                 p.h2(_class="section-title")("Ready to make new friends on campus?"),
                 p.p(_class="section-description")(
-                    "Join thousands of students who are already connecting and building friendships.",
+                    "Join hundreds, if not, tens of students who are already connecting and building friendships.",
                 ),
             ),
             p.div(_class="cta-buttons")(
