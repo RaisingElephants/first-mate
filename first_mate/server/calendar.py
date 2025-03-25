@@ -42,8 +42,7 @@ def show_calendar():
     # TODO: Determine these from form input
     start = datetime(2025, 3, 1)
     end = datetime.now()
-    calendar = open("calendars/ben.ics").read()
-    calendar_events = find_class_events(calendar, start, end)
+    calendar_events = find_class_events(user["calendar"], start, end)
 
     events_html = [event_to_html(event) for event in calendar_events]
 
