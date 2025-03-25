@@ -12,6 +12,7 @@ dependencies = [
     "pytz>=2025.2",
     "recurring-ical-events>=3.6.0",
     "requests>=2.32.3",
+    "uwsgi>=2.0.28",
 ]
 
 [dependency-groups]
