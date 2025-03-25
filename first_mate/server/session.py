@@ -1,6 +1,6 @@
 from flask import session
 
-from first_mate.logic.user import get_user_by_session_id
+from first_mate.logic.user import User, get_user_by_session_id
 
 
 def is_user_logged_in() -> bool:
@@ -22,6 +22,13 @@ def is_user_logged_in() -> bool:
 
 def get_session() -> int | None:
     return session.get("session_id")
+
+
+def get_user() -> User | None:
+    session_id = get_session()
+    if session_id is None:
+        return None
+    return get_user_by_session_id(session_id)
 
 
 def set_session(session_id: int) -> None:
