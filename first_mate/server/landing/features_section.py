@@ -1,45 +1,58 @@
-from pyhtml import div, section, p, img, h2, h3
+import pyhtml as p
 
-def generate_features() -> section:
-    return section(
-        div(
-            div(
-                div("Features", _class="badge"),
-                h2("Everything you need to build connections", _class="section-title"),
-                p("Our platform makes it easy to find and connect with other students on your campus.", _class="section-description"),
-                _class="section-header"
+
+def generate_features() -> p.section:
+    return p.section(id="features", _class="features-section")(
+        p.div(_class="container")(
+            p.div(_class="section-header")(
+                p.div(_class="badge")("Features"),
+                p.h2(_class="section-title")(
+                    "Everything you need to build connections"
+                ),
+                p.p(_class="section-description")(
+                    "Our platform makes it easy to find and connect with other students on your campus."
+                ),
             ),
-            div(
-                div(
-                    div(
-                        img(src="/static/location-icon.svg", alt="Location pin icon", _class="feature-icon"),
-                        _class="feature-icon-wrapper"
+            p.div(_class="features-grid")(
+                p.div(_class="feature-card")(
+                    p.div(_class="feature-icon-wrapper")(
+                        p.img(
+                            src="/static/location-icon.svg",
+                            alt="Location pin icon",
+                            _class="feature-icon",
                         ),
-                    h3("Location-Based", _class="feature-title"),
-                    p("Find students nearby in your dorm, library, or favorite campus spots.", _class="feature-description"),
-                    _class="feature-card"
+                    ),
+                    p.h3(_class="feature-title")("Location-Based"),
+                    p.p(_class="feature-description")(
+                        "Find students nearby in your dorm, library, or favorite campus spots.",
+                    ),
                 ),
-                div(
-                    div(
-                        img(src="/static/people-icon.svg", alt="people together icon", _class="feature-icon"),
-                        _class="feature-icon-wrapper"
+                p.div(_class="feature-card")(
+                    p.div(_class="feature-icon-wrapper")(
+                        p.img(
+                            src="/static/people-icon.svg",
+                            alt="people together icon",
+                            _class="feature-icon",
                         ),
-                    h3("Interest Matching", _class="feature-title"),
-                    p("Connect with students who share your hobbies, major, or extracurricular interests.", _class="feature-description"),
-                    _class="feature-card"
+                    ),
+                    p.h3(_class="feature-title")("Interest Matching"),
+                    p.p(_class="feature-description")(
+                        "Connect with students who share your hobbies, major, or extracurricular interests.",
+                    ),
                 ),
-                div(
-                    div(
-                        img(src="/static/chat-bubble-icon.svg", alt="chat bubble icon", _class="feature-icon"),
-                        _class="feature-icon-wrapper"
+                p.div(_class="feature-card")(
+                    p.div(_class="feature-icon-wrapper")(
+                        p.img(
+                            src="/static/chat-bubble-icon.svg",
+                            alt="chat bubble icon",
+                            _class="feature-icon",
                         ),
-                    h3("Safe Messaging", _class="feature-title"),
-                    p("Chat securely with verified students from your campus.", _class="feature-description"),
-                    _class="feature-card"
+                    ),
+                    p.h3(_class="feature-title")("Safe Messaging"),
+                    p.p(_class="feature-description")(
+                        "Chat securely with verified students from your campus.",
+                    ),
                 ),
-                _class="features-grid"
             ),
-            _class="container"
         ),
-        id="features", _class="features-section"
     )
