@@ -110,3 +110,9 @@ nav a:hover {
     gap: 20px;
     width: 100%;
 }
+
+.profile-name-span {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}

@@ -161,7 +161,8 @@ def profile_image(zid: str, username: str) -> p.img:
 def profile_banner_html(
     zid: str,
     *,
-    matched: bool = False,
+    you_liked: bool = False,
+    liked_you: bool = False,
     link: bool = False,
     is_me: bool = False,
 ) -> p.div:
@@ -188,7 +189,7 @@ def profile_banner_html(
         else p.i("This user has not added a profile description")
     )
 
-    if matched:
+    if you_liked and liked_you:
         display_name = f"{user_to_view['display_name']} - {zid}"
         private_profile_text = p.div(_class="profile-description")(
             [multiline_str_to_html(user_to_view["private_description"])]
@@ -213,13 +214,33 @@ def profile_banner_html(
                 )
             )
         ]
+        like_button = []
+        relationship_html = []
     else:
         its_you_text = []
+        if you_liked:
+            like_button = [
+                p.form(action=f"/mates/unlike/{zid}")(
+                    p.input(type="submit", value="Unlike")
+                )
+            ]
+            relationship_html = [p.i("Matched!")] if liked_you else []
+        else:
+            like_button = [
+                p.form(action=f"/mates/like/{zid}")(
+                    p.input(type="submit", value="Like")
+                )
+            ]
+            relationship_html = [p.i("Likes you")] if liked_you else []
 
     return p.div(_class="profile-banner")(
         profile_image(zid, user_to_view["display_name"]),
         p.div(_class="profile-banner-inner")(
-            p.h2(name_html),
+            p.span(_class="profile-name-span")(
+                p.h2(name_html),
+                like_button,
+                relationship_html,
+            ),
             its_you_text,
             public_profile_text,
             private_profile_text,

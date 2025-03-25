@@ -45,6 +45,9 @@ class User(TypedDict):
     degrees: list[str]
     """List of degrees that the user is studying"""
 
+    likes: list[str]
+    """List of zIDs that the user has liked"""
+
 
 def make_session_id() -> int:
     return secrets.randbelow(sys.maxsize)
@@ -144,6 +147,7 @@ def register_user(
         "calendar": download_ical(ical_url),
         "degrees": degrees,
         "sessions": [session_id],
+        "likes": [],
     }
 
     data = get_data()
