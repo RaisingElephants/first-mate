@@ -10,7 +10,7 @@ from flask import Blueprint, redirect, request
 from first_mate.logic.data import save_data
 from first_mate.logic.event_overlap import Mate, find_mates
 from first_mate.logic.ical_analysis import get_week_range
-from first_mate.logic.user import User, get_user_by_zid
+from first_mate.logic.user import User, get_user_by_id
 from first_mate.server.session import get_user
 from first_mate.server.util import (
     error_page,
@@ -24,14 +24,14 @@ mates = Blueprint("/mates", __name__)
 
 
 def mate_to_html(us: User, mate: Mate, week_offset: int) -> p.div:
-    them = get_user_by_zid(mate["zid"])
+    them = get_user_by_id(mate["id"])
     assert them is not None
 
     return profile_banner_html(
-        mate["zid"],
+        mate["id"],
         link=week_offset,
-        you_liked=mate["zid"] in us["likes"],
-        liked_you=us["zid"] in them["likes"],
+        you_liked=mate["id"] in us["likes"],
+        liked_you=us["id"] in them["likes"],
     )
 
 
@@ -88,15 +88,15 @@ def show_potential_mates():
     )
 
 
-@mates.post("/like/<zid>")
-def like_user(zid: str):
+@mates.post("/like/<int:id>")
+def like_user(id: int):
     """Called when the user likes a user"""
     user = get_user()
 
     if user is None:
         return redirect("/auth/login")
 
-    if user["zid"] == zid:
+    if user["id"] == id:
         return str(
             error_page(
                 "Error 400",
@@ -107,7 +107,7 @@ def like_user(zid: str):
         ), 400
 
     # Ensure mate exists
-    liked_user = get_user_by_zid(zid)
+    liked_user = get_user_by_id(id)
 
     if liked_user is None:
         return str(
@@ -119,22 +119,22 @@ def like_user(zid: str):
             )
         ), 404
 
-    # Add zid to liked list
-    user["likes"].append(zid)
+    # Add user ID to liked list
+    user["likes"].append(id)
     save_data()
 
-    return redirect(f"/profile/{zid}")
+    return redirect(f"/profile/{id}")
 
 
-@mates.post("/unlike/<zid>")
-def unlike_user(zid: str):
+@mates.post("/unlike/<int:id>")
+def unlike_user(id: int):
     """Called when the user un-likes a user"""
     user = get_user()
 
     if user is None:
         return redirect("/auth/login")
 
-    if zid not in user["likes"]:
+    if id not in user["likes"]:
         return str(
             error_page(
                 "Error 400",
@@ -147,7 +147,7 @@ def unlike_user(zid: str):
             )
         ), 400
 
-    user["likes"].remove(zid)
+    user["likes"].remove(id)
     save_data()
 
     return redirect("/mates")

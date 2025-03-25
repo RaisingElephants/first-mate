@@ -18,6 +18,9 @@ from base64 import b64encode
 class User(TypedDict):
     """User data dictionary"""
 
+    id: int
+    """User ID"""
+
     zid: str
     """zID"""
 
@@ -45,11 +48,16 @@ class User(TypedDict):
     degrees: list[str]
     """List of degrees that the user is studying"""
 
-    likes: list[str]
-    """List of zIDs that the user has liked"""
+    likes: list[int]
+    """List of user IDs that the user has liked"""
 
 
-def make_session_id() -> int:
+def make_unique_id() -> int:
+    """
+    Generate a unique ID integer.
+
+    This is used to generate user IDs as well as session IDs.
+    """
     return secrets.randbelow(sys.maxsize)
 
 
@@ -58,8 +66,28 @@ def hash_and_salt(password: str, salt: str) -> str:
     return b64encode(hashed_bytes).decode()
 
 
-def get_user_by_zid(zid: str) -> User | None:
+def get_user_by_id(id: int) -> User | None:
     """Return a user dict given their user ID
+
+    Parameters
+    ----------
+    id : int
+        User ID to search for
+
+    Returns
+    -------
+    User | None
+        user data, or None if not found
+    """
+    for user in get_data()["users"]:
+        if user["id"] == id:
+            return user
+
+    return None
+
+
+def get_user_by_zid(zid: str) -> User | None:
+    """Return a user dict given their zID
 
     Parameters
     ----------
@@ -72,7 +100,7 @@ def get_user_by_zid(zid: str) -> User | None:
         user data, or None if not found
     """
     for user in get_data()["users"]:
-        if user["zid"] == zid:
+        if user["id"] == id:
             return user
 
     return None
@@ -129,15 +157,16 @@ def register_user(
     """
     user_with_zid = get_user_by_zid(zid)
     if user_with_zid:
-        return login_user(zid, password)
+        return None
 
     # Hash and salt password
     salt = str(uuid4())
     hashed = hash_and_salt(password, salt)
 
-    session_id = make_session_id()
+    session_id = make_unique_id()
 
     user_data: User = {
+        "id": make_unique_id(),
         "zid": zid,
         "display_name": display_name,
         "public_description": "",
@@ -186,7 +215,7 @@ def login_user(zid: str, password: str) -> int | None:
     if hashed != user["password_hash"]:
         return None
 
-    session_id = make_session_id()
+    session_id = make_unique_id()
 
     user["sessions"].append(session_id)
     save_data()
