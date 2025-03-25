@@ -63,7 +63,7 @@ def determine_event_type(summary: str, description: str) -> str | None:
     text = f"{summary} {description}".lower()
 
     mappings = {
-        "Lecture": ["lect", "sem"],
+        "Lecture": ["lec", "sem"],
         "Tutorial": ["tut"],
         "Lab": ["lab"],
         "Exam": ["exam", "test", "quiz", "assessment"],
