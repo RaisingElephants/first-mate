@@ -90,6 +90,11 @@ nav a:hover {
     display: flex;
     gap: 20px;
     align-items: center;
+    background-color: #162030;
+    width: 80%;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 20px;
 }
 
 .profile-image {
