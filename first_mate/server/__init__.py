@@ -5,13 +5,11 @@ Entrypoint to the first-mate server.
 """
 
 import os
-import pyhtml as p
 from flask import Flask, send_file
 
 from first_mate.server.landing import render_page
 
 from .session import is_user_logged_in
-from .util import navbar
 from .auth import auth
 from .debug import debug
 from .mates import mates

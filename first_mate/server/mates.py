@@ -48,6 +48,14 @@ def show_potential_mates():
     start, end = get_week_range(week_offset)
     week_str = f"{week_offset_to_str(week_offset)}, {start.strftime('%x')} - {end.strftime('%x')}"
 
+    time_picker = p.div(_class="time-picker")(
+        p.a(href=f"?offset={week_offset - 1}", _class="btn btn-outline")(
+            "Previous week"
+        ),
+        week_str,
+        p.a(href=f"?offset={week_offset + 1}", _class="btn btn-outline")("Next week"),
+    )
+
     mates = find_mates(user, start, end)
 
     mates_html = (
@@ -59,14 +67,10 @@ def show_potential_mates():
             p.img(
                 src="/static/no-bitches.jpg",
                 alt="No bitches meme",
-                width="100%",
-                height="400px",
+                style="width: 100%; height: 400px; border-radius: 20px; margin: 20px;",
             ),
         ]
     )
-
-    prev_week = p.a(href=f"?offset={week_offset - 1}")("Previous week")
-    next_week = p.a(href=f"?offset={week_offset + 1}")("Next week")
 
     return str(
         p.html(
@@ -77,11 +81,7 @@ def show_potential_mates():
             p.body(
                 navbar(True),
                 p.h1("Your mate recommendations"),
-                p.div(
-                    prev_week,
-                    week_str,
-                    next_week,
-                ),
+                time_picker,
                 mates_html,
             ),
         )

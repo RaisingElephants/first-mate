@@ -1,120 +1,137 @@
-from pyhtml import footer, form, html, head, body, meta, script, title, link, div, header, nav, a, span, main, section, h1, p, img, h2, h3, input
+from datetime import datetime
+import pyhtml as p
 
 from first_mate.server.landing.features_section import generate_features
-from first_mate.server.landing.how_it_works_testimonials_section import generate_how_it_works, generate_testimonials
+from first_mate.server.landing.how_it_works_testimonials_section import (
+    generate_how_it_works,
+    generate_testimonials,
+)
 from first_mate.server.util import navbar
 
-def generate_head() -> head:
-    return head(
-        meta(charset="UTF-8"),
-        meta(name="viewport", content="width=device-width, initial-scale=1.0"),
-        title("FirstMate - Find Friends on Campus"),
-        link(rel="stylesheet", href="/static/landing.css"),
-    )
-    
-def generate_cta() -> section:
-    return section(
-        div(
-            div(
-                h2("Ready to make new friends on campus?", _class="section-title"),
-                p("Join thousands of students who are already connecting and building friendships.", _class="section-description"),
-                _class="section-header"
-            ),
-            div(
-                a("Sign Up Now", href="/auth/register", _class="btn btn-primary btn-lg"),
-                _class="cta-buttons"
-            ),
-            _class="container"
-        ),
-        _class="cta-section"
-)
 
-def generate_footer() -> footer:
-    return footer(
-        div(
-            div(
-                a(div(
-                    img(src="/static/firstmate-logo.png", alt="FirstMate logo", _class="logo-icon-small"),
-                    span("FirstMate", _class="logo-text-small"),
-                    _class="footer-logo"
-                ),
-                href="/",
-                title="Return to Homepage"),
-                p(
-                    "© ",
-                    script("document.write(new Date().getFullYear())"),
-                    "-FirstMate. All rights reserved.",
-                    _class="copyright"
-                ),
-                div(
-                    a("Terms", href="/terms", _class="footer-link"),
-                    a("Privacy", href="/privacy", _class="footer-link"),
-                    a("Contact", href="/contact", _class="footer-link"),
-                    _class="footer-links"
-                ),
-                _class="footer-content"
-            ),
-            _class="container"
-        ),
-        _class="site-footer"
+def generate_head() -> p.head:
+    return p.head(
+        p.meta(charset="UTF-8"),
+        p.meta(name="viewport", content="width=device-width, initial-scale=1.0"),
+        p.title("FirstMate - Find Friends on Campus"),
+        p.link(rel="stylesheet", href="/static/root.css"),
+        p.link(rel="stylesheet", href="/static/landing.css"),
     )
 
 
-def generate_header(logged_in: bool) -> header:
-    return header(
-        div(
+def generate_cta(logged_in: bool) -> p.section:
+    return p.section(_class="cta-section")(
+        p.div(_class="container")(
+            p.div(_class="section-header")(
+                p.h2(_class="section-title")("Ready to make new friends on campus?"),
+                p.p(_class="section-description")(
+                    "Join hundreds, if not, tens of students who are already connecting and building friendships.",
+                ),
+            ),
+            p.div(_class="cta-buttons")(
+                (
+                    p.a(href="/auth/register", _class="btn btn-primary btn-lg")(
+                        "Sign Up Now",
+                    )
+                    if not logged_in
+                    else p.a(href="/mates", _class="btn btn-primary btn-lg")(
+                        "Find your mates",
+                    )
+                ),
+            ),
+        ),
+    )
+
+
+def generate_footer() -> p.footer:
+    return p.footer(_class="site-footer")(
+        p.div(_class="container")(
+            p.div(_class="footer-content")(
+                p.a(href="/", title="Return to homepage")(
+                    p.div(_class="footer-logo")(
+                        p.img(
+                            src="/static/firstmate-logo.png",
+                            alt="FirstMate logo",
+                            _class="logo-icon-small",
+                        ),
+                        p.span(_class="logo-text-small")("FirstMate"),
+                    ),
+                ),
+                p.p(_class="copyright")(
+                    f"© {datetime.now().year} FirstMate. All rights reserved.",
+                ),
+                p.div(_class="footer-links")(
+                    p.a(href="/terms", _class="footer-link")("Terms"),
+                    p.a(href="/privacy", _class="footer-link")("Privacy"),
+                    p.a(href="/contact", _class="footer-link")("Contact"),
+                ),
+            ),
+        ),
+    )
+
+
+def generate_hero(logged_in: bool) -> p.section:
+    return p.section(_class="hero-section")(
+        p.div(_class="hero-grid")(
+            p.div(_class="hero-content")(
+                p.h1(_class="hero-title")("Find your crowd"),
+                p.p(_class="hero-description")(
+                    "FirstMate helps you make friends that work with your schedule",
+                ),
+                p.div(_class="hero-buttons")(
+                    (
+                        p.a(
+                            href="/auth/register",
+                            _class="btn btn-primary btn-lg",
+                        )("Get Started")
+                        if not logged_in
+                        else p.a(
+                            href="/mates",
+                            _class="btn btn-primary btn-lg",
+                        )("Find your mates")
+                    ),
+                    p.a(
+                        href="#features",
+                        _class="btn btn-outline btn-lg",
+                    )("Learn More"),
+                ),
+            ),
+            p.div(
+                p.img(
+                    src="/static/friends.webp",
+                    alt="Students connecting on campus",
+                    _class="rounded-image",
+                ),
+                _class="hero-image",
+            ),
+        ),
+    )
+
+
+def generate_body(logged_in: bool) -> p.body:
+    return p.body(
+        p.div(_class="flex min-h-screen flex-col")(
             navbar(logged_in),
-            _class="container"
-        ),
-        _class="sticky-header"
-    )
-
-def generate_hero() -> section:
-    return section(
-        div(
-            div(
-                h1("Find Friends on Campus", _class="hero-title"),
-                p("Connect with students who share your interests, classes, and hangout spots.", _class="hero-description"),
-                div(
-                    a("Get Started", href="/auth/register", _class="btn btn-primary btn-lg"),
-                    a("Learn More", href="#how-it-works", _class="btn btn-outline btn-lg"),
-                    _class="hero-buttons"
-                ),
-                _class="hero-content"
-            ),
-            div(
-                img(src="/static/friends.webp", alt="Students connecting on campus", _class="rounded-image"),
-                _class="hero-image"
-            ),
-            _class="hero-grid"
-        ),
-        _class="hero-section"
-    )
-
-def generate_body(logged_in: bool) -> body:
-    return body(
-        div(
-            generate_header(logged_in),
-            main(
-                generate_hero(),
+            p.main(_class="flex-1")(
+                generate_hero(logged_in),
                 generate_features(),
                 generate_how_it_works(),
                 generate_testimonials(),
-                generate_cta(),
-                _class="flex-1"
+                generate_cta(logged_in),
             ),
             generate_footer(),
-            _class="flex min-h-screen flex-col"
         )
     )
-    
 
-    
+
 def render_page(logged_in: bool) -> str:
-    return str(html(
-        generate_head(),
-        generate_body(logged_in),
-    ))
+    return str(
+        p.html(
+            generate_head(),
+            generate_body(logged_in),
+        )
+    )
+
 
 # if __name__ == "__main__":
 #     print(render_page())

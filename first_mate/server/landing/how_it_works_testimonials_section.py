@@ -1,81 +1,72 @@
-from pyhtml import div, h2, h3, p, section
+import pyhtml as p
 
 
-def generate_how_it_works() -> section:
-    return section(
-        div(
-            div(
-                div("How It Works", _class="badge"),
-                h2("Start making friends in 3 simple steps", _class="section-title"),
-                _class="section-header"
+def generate_how_it_works() -> p.section:
+    return p.section(id="how-it-works", _class="how-it-works-section")(
+        p.div(_class="container")(
+            p.div(_class="section-header")(
+                p.div(_class="badge")("How It Works"),
+                p.h2(_class="section-title")("Start making friends in 3 simple steps"),
             ),
-            div(
-                div(
-                    div("1", _class="step-number"),
-                    h3("Create Your Profile", _class="step-title"),
-                    p("Sign up with your school email and create a profile with your interests and classes.", _class="step-description"),
-                    _class="step-card"
-                ),
-                div(
-                    div("2", _class="step-number"),
-                    h3("Discover Students", _class="step-title"),
-                    p("Browse profiles of students nearby who share your interests and schedule.", _class="step-description"),
-                    _class="step-card"
-                ),
-                div(
-                    div("3", _class="step-number"),
-                    h3("Connect & Meet", _class="step-title"),
-                    p("Send a message, plan a meetup, and make new friends on campus.", _class="step-description"),
-                    _class="step-card"
-                ),
-                _class="steps-grid"
-            ),
-            _class="container"
-        ),
-        id="how-it-works", _class="how-it-works-section"
-    )
-    
-
-def generate_testimonials() -> section:
-    return section(
-        div(
-            div(
-                div("Testimonials", _class="badge"),
-                h2("Hear from students who found friends", _class="section-title"),
-                _class="section-header"
-            ),
-            div(
-                div(
-                    p("I was new to campus and didn't know anyone. FirstMate helped me find students in my dorm who shared my love for gaming. Now we have weekly game nights!", _class="testimonial-text"),
-                    div(
-                        div(_class="author-avatar"),
-                        div(
-                            p("Alex J.", _class="author-name"),
-                            p("Freshman, Computer Science", _class="author-details"),
-                            _class="author-info"
-                        ),
-                        _class="testimonial-author"
+            p.div(_class="steps-grid")(
+                p.div(_class="step-card")(
+                    p.div(_class="step-number")("1"),
+                    p.h3(_class="step-title")("Create your profile"),
+                    p.p(_class="step-description")(
+                        "Sign up with your zID and create your profile.",
                     ),
-                    _class="testimonial-card"
                 ),
-                div(
-                    p("As a transfer student, it was hard to break into established friend groups. This app helped me connect with other transfer students and now I have an amazing circle of friends.", _class="testimonial-text"),
-                    div(
-                        div(_class="author-avatar"),
-                        div(
-                            p("Taylor M.", _class="author-name"),
-                            p("Junior, Psychology", _class="author-details"),
-                            _class="author-info"
-                        ),
-                        _class="testimonial-author"
+                p.div(_class="step-card")(
+                    p.div(_class="step-number")("2"),
+                    p.h3("Sync your schedule", _class="step-title"),
+                    p.p(_class="step-description")(
+                        "Upload your UNSW calendar, and we'll analyse it to find people on-campus at the same time as you.",
                     ),
-                    _class="testimonial-card"
                 ),
-                _class="testimonials-grid"
+                p.div(_class="step-card")(
+                    p.div(_class="step-number")("3"),
+                    p.h3(_class="step-title")("Find your new besties"),
+                    p.p(_class="step-description")(
+                        "Add friends, and share details with your mates!",
+                    ),
+                ),
             ),
-            _class="container"
         ),
-        id="testimonials", _class="testimonials-section"
     )
 
-    
+
+def generate_testimonials() -> p.section:
+    return p.section(id="testimonials", _class="testimonials-section")(
+        p.div(_class="container")(
+            p.div(_class="section-header")(
+                p.div(_class="badge")("Testimonials"),
+                p.h2(_class="section-title")("Hear from students who found friends"),
+            ),
+            p.div(_class="testimonials-grid")(
+                p.div(_class="testimonial-card")(
+                    p.p(_class="testimonial-text")(
+                        "I was new to campus and didn't know anyone. FirstMate helped me meet people on my own terms, allowing our friendships to grow naturally.",
+                    ),
+                    p.div(_class="testimonial-author")(
+                        p.div(_class="author-avatar"),
+                        p.div(_class="author-info")(
+                            p.p(_class="author-name")("Alex J."),
+                            p.p(_class="author-details")("1st Year, Computer Science"),
+                        ),
+                    ),
+                ),
+                p.div(_class="testimonial-card")(
+                    p.p(_class="testimonial-text")(
+                        "As a transfer student, it was hard to break into established friend groups. FirstMate helped me connect with other transfer students and now I have an amazing circle of friends.",
+                    ),
+                    p.div(_class="testimonial-author")(
+                        p.div(_class="author-avatar"),
+                        p.div(_class="author-info")(
+                            p.p(_class="author-name")("Taylor M."),
+                            p.p(_class="author-details")("2nd Year, Psychology"),
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    )

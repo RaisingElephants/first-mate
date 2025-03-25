@@ -100,7 +100,7 @@ def get_user_by_zid(zid: str) -> User | None:
         user data, or None if not found
     """
     for user in get_data()["users"]:
-        if user["id"] == id:
+        if user["zid"] == zid:
             return user
 
     return None

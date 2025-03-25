@@ -59,47 +59,53 @@ def list_to_checkboxes(
     return p.div(html_values)
 
 
-def navbar(logged_in: bool) -> p.nav:
+def navbar(logged_in: bool) -> p.header:
     if logged_in:
         auth_options = [
-            p.a(href="/mates")(p.h2("Find mates")),
-            p.a(href="/profile")(p.h2("My profile")),
-            p.a(href="/auth/logout")(p.h2("Log out")),
+            p.a("Find your mates", href="/mates", _class="btn btn-primary"),
+            p.a("My profile", href="/profile", _class="btn btn-outline"),
+            p.a("Log Out", href="/auth/logout", _class="btn btn-outline"),
         ]
     else:
         auth_options = [
-            p.a("Register", href="/auth/register", Class="btn btn-primary"),
-            p.a("Log In", href="/auth/login", Class="btn btn-outline"),
+            p.a("Register", href="/auth/register", _class="btn btn-primary"),
+            p.a("Log In", href="/auth/login", _class="btn btn-outline"),
         ]
 
     # TODO: Make this only enabled in debug mode
     debug_options = [
-        p.form(action="/debug/clear", _class="debug_button")(
-            p.input(type="submit", value="Reset server"),
+        p.form(action="/debug/clear")(
+            p.input(type="submit", value="Reset server", _class="btn btn-debug"),
         )
     ]
 
-    return p.nav(
-        generate_logo(),
-        p.a("Features", href="#features", Class="nav-link"),
-        p.a("How It Works", href="#how-it-works", Class="nav-link"),
-        p.a("Testimonials", href="#testimonials", Class="nav-link"),
-        auth_options,
-        debug_options,
-        Class="main-nav"
+    return p.header(_class="sticky-header")(
+        p.div(_class="container")(
+            p.nav(
+                generate_logo(),
+                auth_options,
+                debug_options,
+                _class="main-nav",
+            )
+        )
     )
+
 
 def generate_logo():
     return p.a(
         p.div(
-            p.img(src="/static/firstmate-logo.png", alt="FirstMate logo", Class="logo-icon"),
-            p.span("FirstMate", Class="logo-text"),
-            Class="logo"
+            p.img(
+                src="/static/firstmate-logo.png",
+                alt="FirstMate logo",
+                _class="logo-icon",
+            ),
+            p.span("FirstMate", _class="logo-text"),
+            _class="logo",
         ),
         href="/",
-        title="Return to Homepage"
+        title="Return to Homepage",
     )
-    
+
 
 def error_page(
     title: str,
@@ -211,16 +217,26 @@ def profile_banner_html(
     public_profile_text = p.div(_class="profile-description")(
         multiline_str_to_html(user_to_view["public_description"])
         if user_to_view["public_description"]
-        else p.i("This user has not added a profile description")
+        else p.i(
+            "You haven't added a profile description"
+            if its_you
+            else "This user has not added a profile description"
+        )
     )
 
-    if you_liked and liked_you:
+    if (you_liked and liked_you) or its_you:
         # For matches, display zIDs
         display_name = f"{user_to_view['display_name']} - {user_to_view['zid']}"
         private_profile_text = p.div(_class="profile-description")(
             [multiline_str_to_html(user_to_view["private_description"])]
             if user_to_view["private_description"]
-            else [p.i("This user has not added a private profile description")]
+            else [
+                p.i(
+                    "You haven't added a private profile description"
+                    if its_you
+                    else "This user has not added a private profile description"
+                )
+            ]
         )
     else:
         display_name = user_to_view["display_name"]
@@ -234,13 +250,18 @@ def profile_banner_html(
 
     if its_you:
         its_you_text = [
-            p.p(
-                p.i(
-                    "It's you!"
-                    if random.randint(0, 9)
-                    else "Despite everything, it's still you."
-                )
-            )
+            p.div(_class="profile-its-you")(
+                p.a(href=f"/profile/{id}/edit", _class="btn btn-primary")(
+                    "Edit profile"
+                ),
+                p.b(
+                    p.i(
+                        "It's you!"
+                        if random.randint(0, 9)
+                        else "Despite everything, it's still you."
+                    )
+                ),
+            ),
         ]
         like_button = []
         friendship_html = []
@@ -249,13 +270,15 @@ def profile_banner_html(
         if you_liked:
             like_button = [
                 p.form(action=f"/mates/unlike/{id}")(
-                    p.input(type="submit", value="Unlike")
+                    p.input(type="submit", value="Unlike", _class="btn btn-outline")
                 )
             ]
             friendship_html = [p.i("🎉 It's a match!")] if liked_you else []
         else:
             like_button = [
-                p.form(action=f"/mates/like/{id}")(p.input(type="submit", value="Like"))
+                p.form(action=f"/mates/like/{id}")(
+                    p.input(type="submit", value="Like", _class="btn btn-primary")
+                )
             ]
             friendship_html = [p.i("👋 Likes you!")] if liked_you else []
 

@@ -30,12 +30,14 @@ Time used to determine whether a user has enough free time to actually meet up.
 
 
 class MatchInfo(TypedDict):
-    time: int
-    """Time of match"""
     before: bool
     """Whether the meet-up should happen before or after"""
     class_description: str
     """Description of class"""
+    start: int
+    """Start time of user's event"""
+    end: int
+    """End time of user's event"""
 
 
 class Mate(TypedDict):
@@ -127,7 +129,8 @@ def get_matching_times(
                 ):
                     matches.append(
                         {
-                            "time": my_class["start"],
+                            "start": my_class["start"],
+                            "end": my_class["end"],
                             "before": True,
                             "class_description": f"{my_class['course_code']} {my_class['class_type']}",
                         }
@@ -141,13 +144,14 @@ def get_matching_times(
                 ):
                     matches.append(
                         {
-                            "time": my_class["start"],
+                            "start": my_class["start"],
+                            "end": my_class["end"],
                             "before": False,
                             "class_description": f"{my_class['course_code']} {my_class['class_type']}",
                         }
                     )
 
-    return matches
+    return sorted(matches, key=lambda match: match["start"])
 
 
 def find_mates(

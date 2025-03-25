@@ -22,7 +22,6 @@ from first_mate.server.util import (
     error_page,
     navbar,
     profile_banner_html,
-    profile_image,
     week_offset_to_str,
 )
 
@@ -40,37 +39,50 @@ def profile_root():
     return redirect(f"/profile/{user['id']}")
 
 
+def format_time(t: int) -> str:
+    return datetime.fromtimestamp(t).strftime("%-I:%M%p")
+
+
 def calendar_event_to_html(ev: ClassEvent) -> p.div:
     start_dt = datetime.fromtimestamp(ev["start"], LOCAL_TZ)
-    end_dt = datetime.fromtimestamp(ev["end"], LOCAL_TZ)
-
-    start_str = start_dt.strftime("%c")
-    end_str = end_dt.strftime("%X")
-
+    time_str = f"{format_time(ev['start'])} - {format_time(ev['end'])}"
+    day_str = start_dt.strftime("%A %B %-d")
     return p.div(_class="calendar-event")(
         p.h2(f"{ev['course_code']} {ev['class_type']}"),
-        p.p(f"{start_str} - {end_str}"),
-        p.p(ev["location"]),
+        p.div(_class="event-details")(
+            p.p(
+                day_str,
+                p.br(),
+                time_str,
+            ),
+            p.p(ev["location"]),
+        ),
     )
 
 
 def match_to_html(match: MatchInfo) -> p.div:
-    timing = "Before" if match["before"] else "After"
-    time_str = datetime.fromtimestamp(match["time"], LOCAL_TZ).strftime("%c")
+    start_dt = datetime.fromtimestamp(match["start"], LOCAL_TZ)
+    if match["before"]:
+        timing = "Before"
+        starting = "Starting"
+        time_str = format_time(match["start"])
+    else:
+        timing = "After"
+        starting = "Finishing"
+        time_str = format_time(match["end"])
+    day_str = start_dt.strftime("%A %B %-d")
 
-    return p.div(
+    return p.div(_class="calendar-event")(
         p.p(
-            f"{timing} {match['class_description']}",
-            p.br(),
-            f"On {time_str}",
+            p.h2(f"{timing} your {match['class_description']}"),
+            p.p(f"{starting} {time_str} on {day_str}"),
         )
     )
 
 
-def schedule_matches_html(matches: list[MatchInfo]) -> p.div:
+def schedule_matches_html(matches: list[MatchInfo]):
     """Make HTML to show schedule matches"""
-    matches_html = [match_to_html(match) for match in matches]
-    return p.div(matches_html)
+    return [match_to_html(match) for match in matches]
 
 
 @profile.get("/<int:id>")
@@ -104,9 +116,17 @@ def profile_page(id: int):
     liked_you = me["id"] in them["likes"]
     you_liked = id in me["likes"]
 
+    time_picker = p.div(_class="time-picker")(
+        p.a(href=f"?offset={week_offset - 1}", _class="btn btn-outline")(
+            "Previous week"
+        ),
+        week_str,
+        p.a(href=f"?offset={week_offset + 1}", _class="btn btn-outline")("Next week"),
+    )
+
     # Give edit option if it's us
     if its_me:
-        edit_option = [p.a(href=f"/profile/{id}/edit")("Edit profile")]
+        edit_option = []
 
         # List all matches with us
         matches = [
@@ -127,15 +147,16 @@ def profile_page(id: int):
                     for user in matches
                 ]
                 if len(matches)
-                else [p.p(p.i("Nobody has matched with you yet"))]
+                else [p.p(p.i("Nobody has matched with you yet."))]
             ),
         ]
 
         calendar_events = find_class_events(me["calendar"], start, end)
         calendar_html = [
             p.h2("Your calendar"),
-            p.p("Your calendar is not shown to other users"),
-            *(
+            p.p("Your calendar is not shown to other users."),
+            time_picker,
+            p.div(_class="calendar")(
                 [calendar_event_to_html(event) for event in calendar_events]
                 if len(calendar_events)
                 else [p.i("Your don't have any events this week.")]
@@ -147,8 +168,9 @@ def profile_page(id: int):
 
         schedule_matches = get_matching_times(me, them, start, end)
         calendar_html = [
-            p.h2("Your shared events"),
-            (
+            p.h2("Your meet-up opportunities"),
+            time_picker,
+            p.div(_class="calendar")(
                 schedule_matches_html(schedule_matches)
                 if len(schedule_matches)
                 else p.i("Your schedules don't overlap this week.")
@@ -162,9 +184,6 @@ def profile_page(id: int):
         you_liked=you_liked,
     )
 
-    prev_week = p.a(href=f"?offset={week_offset - 1}")("Previous week")
-    next_week = p.a(href=f"?offset={week_offset + 1}")("Next week")
-
     return str(
         p.html(
             p.head(
@@ -174,15 +193,12 @@ def profile_page(id: int):
             ),
             p.body(
                 navbar(True),
-                banner_html,
-                edit_option,
-                matches_html,
-                p.div(
-                    prev_week,
-                    week_str,
-                    next_week,
+                p.main(
+                    banner_html,
+                    edit_option,
+                    matches_html,
+                    calendar_html,
                 ),
-                calendar_html,
             ),
         )
     )
@@ -203,6 +219,8 @@ def profile_edit_page(id: int):
             )
         ), 403
 
+    banner_html = profile_banner_html(id, its_you=True)
+
     return str(
         p.html(
             p.head(
@@ -212,57 +230,75 @@ def profile_edit_page(id: int):
             ),
             p.body(
                 navbar(True),
-                p.h1("Edit profile"),
-                profile_image(user["zid"], user["display_name"]),
-                p.i("You can edit your profile picture using Gravatar"),
-                p.form(
-                    # Main profile edit
-                    # Submit
-                    p.div(_class="profile-edit-actions")(
-                        p.input(type="submit", value="Save", name="save"),
-                        p.input(type="submit", value="Cancel"),
+                p.main(
+                    p.h1("Edit profile"),
+                    p.form(
+                        # Main profile edit
+                        # Submit
+                        p.div(_class="profile-edit-actions")(
+                            p.input(
+                                type="submit",
+                                value="Save",
+                                name="save",
+                                _class="btn btn-primary",
+                            ),
+                            p.input(
+                                type="submit", value="Cancel", _class="btn btn-outline"
+                            ),
+                        ),
+                        banner_html,
+                        p.p(p.i("You can edit your profile picture using Gravatar.")),
+                        # Name
+                        p.div(p.label(for_="edit-name")("Display name")),
+                        p.input(
+                            type="text",
+                            id="edit-name",
+                            name="name",
+                            placeholder="Display name",
+                            value=user["display_name"],
+                            required=True,
+                        ),
+                        # Profile description
+                        p.div(
+                            p.label(for_="edit-public-description")(
+                                "Public profile description. This is shown to all users."
+                            )
+                        ),
+                        p.textarea(style="width: 100%; height: 200px;")(
+                            id="edit-public-description",
+                            name="public_description",
+                            placeholder="Your public profile description",
+                        )(user["public_description"]),
+                        p.div(
+                            p.label(for_="edit-private-description")(
+                                "Public profile description. This is only shown to "
+                                "users who you have matched with."
+                            )
+                        ),
+                        p.textarea(style="width: 100%; height: 200px;")(
+                            id="edit-private-description",
+                            name="private_description",
+                            placeholder="Your private profile description",
+                        )(user["private_description"]),
+                        # TODO: Degrees
                     ),
-                    # Name
-                    p.label(for_="edit-name")(p.p("Display name")),
-                    p.input(
-                        id="edit-name",
-                        name="name",
-                        placeholder="Display name",
-                        value=user["display_name"],
-                        required=True,
-                    ),
-                    # Profile description
-                    p.label(for_="edit-public-description")(
-                        p.p("Public profile description. This is shown to all users."),
-                    ),
-                    p.textarea(style="width: 100%; height: 200px;")(
-                        id="edit-public-description",
-                        name="public_description",
-                        placeholder="Your public profile description",
-                    )(user["public_description"]),
-                    p.label(for_="edit-private-description")(
-                        p.p(
-                            "Public profile description. This is only shown to "
-                            "users who you have matched with."
+                    p.form(action=f"/profile/{id}/edit/calendar")(
+                        p.div(p.label(for_="calendar-url")("Calendar URL")),
+                        p.input(
+                            type="url",
+                            id="calendar-url",
+                            name="calendar_url",
+                            placeholder="webcal://example.com/calendar.ics",
+                            required=True,
+                        ),
+                        p.div(
+                            p.input(
+                                type="submit",
+                                value="Update calendar",
+                                _class="btn btn-primary",
+                            )
                         ),
                     ),
-                    p.textarea(style="width: 100%; height: 200px;")(
-                        id="edit-private-description",
-                        name="private_description",
-                        placeholder="Your private profile description",
-                    )(user["private_description"]),
-                    # TODO: Degrees
-                ),
-                p.form(action=f"/profile/{id}/edit/calendar")(
-                    p.label(for_="calendar-url")(p.p("Calendar URL")),
-                    p.input(
-                        type="url",
-                        id="calendar-url",
-                        name="calendar_url",
-                        placeholder="webcal://example.com/calendar.ics",
-                        required=True,
-                    ),
-                    p.input(type="submit", value="Update calendar"),
                 ),
             ),
         )

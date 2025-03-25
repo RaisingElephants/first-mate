@@ -3,3 +3,63 @@ profile.css
 
 CSS only linked on profile pages.
 */
+
+main {
+    display: flex;
+    flex-direction: column;
+    margin: 0 3rem;
+}
+
+.profile-edit-actions {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    gap: 10px;
+    width: 100%;
+}
+
+.profile-its-you {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+input[type="text"],
+input[type="url"],
+textarea {
+    height: 2rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    border: solid black 1px;
+    margin: 10px 0;
+}
+
+textarea {
+    width: 100%;
+    resize: vertical;
+}
+
+.calendar-event {
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.calendar-event h2, .calendar-event p {
+    margin: 0;
+}
+
+.event-details {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+
+/* on-off colours for calendar events */
+.calendar-event:nth-child(odd) {
+    background-color: var(--muted);
+}
+
+.calendar {
+    margin: 20px 0;
+}
