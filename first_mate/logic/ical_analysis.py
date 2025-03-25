@@ -165,7 +165,7 @@ def find_class_events(
         if class_info is not None:
             classes_this_week.append(class_info)
 
-    return classes_this_week
+    return sorted(classes_this_week, key=lambda cls: cls["start"])
 
 
 if __name__ == "__main__":

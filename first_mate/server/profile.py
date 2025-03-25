@@ -43,12 +43,17 @@ def calendar_event_to_html(ev: ClassEvent) -> p.div:
     start_dt = datetime.fromtimestamp(ev["start"], LOCAL_TZ)
     end_dt = datetime.fromtimestamp(ev["end"], LOCAL_TZ)
 
-    start_str = start_dt.strftime("%c")
-    end_str = end_dt.strftime("%X")
+    day_str = start_dt.strftime("%A %B %-d")
+
+    time_str = f"{start_dt.strftime('%-I:%M%p')} - {end_dt.strftime('%-I:%M%p')}"
 
     return p.div(_class="calendar-event")(
         p.h2(f"{ev['course_code']} {ev['class_type']}"),
-        p.p(f"{start_str} - {end_str}"),
+        p.p(
+            day_str,
+            p.br(),
+            time_str,
+        ),
         p.p(ev["location"]),
     )
 
@@ -246,18 +251,22 @@ def profile_edit_page(id: int):
                             required=True,
                         ),
                         # Profile description
-                        p.div(p.label(for_="edit-public-description")(
-                            "Public profile description. This is shown to all users."
-                        )),
+                        p.div(
+                            p.label(for_="edit-public-description")(
+                                "Public profile description. This is shown to all users."
+                            )
+                        ),
                         p.textarea(style="width: 100%; height: 200px;")(
                             id="edit-public-description",
                             name="public_description",
                             placeholder="Your public profile description",
                         )(user["public_description"]),
-                        p.div(p.label(for_="edit-private-description")(
-                            "Public profile description. This is only shown to "
-                            "users who you have matched with."
-                        )),
+                        p.div(
+                            p.label(for_="edit-private-description")(
+                                "Public profile description. This is only shown to "
+                                "users who you have matched with."
+                            )
+                        ),
                         p.textarea(style="width: 100%; height: 200px;")(
                             id="edit-private-description",
                             name="private_description",
@@ -274,11 +283,13 @@ def profile_edit_page(id: int):
                             placeholder="webcal://example.com/calendar.ics",
                             required=True,
                         ),
-                        p.div(p.input(
-                            type="submit",
-                            value="Update calendar",
-                            _class="btn btn-primary",
-                        )),
+                        p.div(
+                            p.input(
+                                type="submit",
+                                value="Update calendar",
+                                _class="btn btn-primary",
+                            )
+                        ),
                     ),
                 ),
             ),
