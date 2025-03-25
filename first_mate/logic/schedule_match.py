@@ -1,19 +1,25 @@
-# UNSW Current Week Class Schedule
+# UNSW Class Schedule with Schedule Matching Feature
 # Requirements: pip install flask icalendar requests pytz dateutil
 
 from flask import Flask, request, jsonify
 import requests
 from icalendar import Calendar
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 import pytz
 from collections import defaultdict
 import re
 import hashlib
+import copy
 
 app = Flask(__name__)
 
 # Local timezone - using Australia/Sydney for UNSW
 LOCAL_TZ = pytz.timezone('Australia/Sydney')
+
+# Constants for schedule matching
+TIME_SLOT_INTERVAL = 30  # 30-minute intervals
+DEFAULT_DAY_START = 8    # 8 AM
+DEFAULT_DAY_END = 22     # 10 PM
 
 # Define complete term information with start and end dates
 TERM_INFO = {
@@ -494,6 +500,244 @@ def parse_ics_data(ics_data):
             "error": f"Error parsing ICS data: {str(e)}\n{error_details}"
         }
 
+# --- Begin Schedule Matching Functions ---
+
+def create_day_schedule(day_date, start_hour=DEFAULT_DAY_START, end_hour=DEFAULT_DAY_END):
+    """
+    Create time slots for a day with the given interval
+    
+    Args:
+        day_date: The date for the day
+        start_hour: Hour to start the schedule (default 8 AM)
+        end_hour: Hour to end the schedule (default 10 PM)
+        
+    Returns:
+        List of time slots for the day
+    """
+    slots = []
+    
+    # Create day start and end datetime objects
+    day_start = datetime.combine(day_date.date(), time(start_hour, 0), tzinfo=LOCAL_TZ)
+    day_end = datetime.combine(day_date.date(), time(end_hour, 0), tzinfo=LOCAL_TZ)
+    
+    # Create slots at regular intervals
+    current = day_start
+    while current < day_end:
+        end_time = current + timedelta(minutes=TIME_SLOT_INTERVAL)
+        slots.append({
+            'start': current,
+            'end': end_time,
+            'busy': False
+        })
+        current = end_time
+    
+    return slots
+
+def mark_busy_slots(day_schedule, events):
+    """
+    Mark time slots as busy based on events
+    
+    Args:
+        day_schedule: List of time slots for the day
+        events: List of events for the day
+        
+    Returns:
+        Updated day schedule with busy slots marked
+    """
+    # Create a deep copy to avoid modifying the original
+    updated_schedule = copy.deepcopy(day_schedule)
+    
+    for slot in updated_schedule:
+        for event in events:
+            event_start = event['start_datetime']
+            event_end = event_start + timedelta(minutes=event['duration_minutes'])
+            
+            # Check if event overlaps with this slot
+            if (event_start < slot['end'] and event_end > slot['start']):
+                slot['busy'] = True
+                break
+    
+    return updated_schedule
+
+def find_common_free_times(schedule1, schedule2):
+    """
+    Find common free time slots between two schedules
+    
+    Args:
+        schedule1: First person's schedule
+        schedule2: Second person's schedule
+        
+    Returns:
+        List of common free time slots
+    """
+    common_free_slots = []
+    
+    for i in range(len(schedule1)):
+        if not schedule1[i]['busy'] and not schedule2[i]['busy']:
+            common_free_slots.append(schedule1[i])
+    
+    return common_free_slots
+
+def merge_consecutive_slots(slots):
+    """
+    Merge consecutive free time slots into longer blocks
+    
+    Args:
+        slots: List of free time slots
+        
+    Returns:
+        List of merged time slots
+    """
+    if not slots:
+        return []
+    
+    merged_slots = []
+    current_block = None
+    
+    for slot in slots:
+        if current_block is None:
+            # Start a new block
+            current_block = {
+                'start': slot['start'],
+                'end': slot['end']
+            }
+        elif slot['start'] == current_block['end']:
+            # Extend the current block
+            current_block['end'] = slot['end']
+        else:
+            # Save the current block and start a new one
+            merged_slots.append(current_block)
+            current_block = {
+                'start': slot['start'],
+                'end': slot['end']
+            }
+    
+    # Don't forget to add the last block
+    if current_block:
+        merged_slots.append(current_block)
+    
+    return merged_slots
+
+def format_time(dt):
+    """Format datetime as HH:MM AM/PM without leading zeros"""
+    # Standard format first
+    formatted = dt.strftime('%I:%M %p')
+    # Remove leading zero if present
+    if formatted.startswith('0'):
+        formatted = formatted[1:]
+    return formatted
+
+def get_matching_free_times(webcal_url1, webcal_url2, days_to_check=5):
+    """
+    Get matching free times between two schedules
+    
+    Args:
+        webcal_url1: First person's WebCal URL
+        webcal_url2: Second person's WebCal URL
+        days_to_check: Number of days to check for free times
+        
+    Returns:
+        Dictionary with matching free times organized by day
+    """
+    try:
+        # Convert URLs and fetch data
+        https_url1 = convert_webcal_to_https(webcal_url1)
+        https_url2 = convert_webcal_to_https(webcal_url2)
+        
+        ics_data1 = fetch_ics_data(https_url1)
+        ics_data2 = fetch_ics_data(https_url2)
+        
+        if isinstance(ics_data1, tuple):  # Error occurred
+            return {"error": ics_data1[1]}
+        if isinstance(ics_data2, tuple):  # Error occurred
+            return {"error": ics_data2[1]}
+        
+        # Parse calendars
+        schedule1 = parse_ics_data(ics_data1)
+        schedule2 = parse_ics_data(ics_data2)
+        
+        if "error" in schedule1:
+            return schedule1
+        if "error" in schedule2:
+            return schedule2
+        
+        # Get current term and week information
+        term_year, term_number, term_info, week_number, week_label = find_current_term_and_week()
+        
+        # Get the current week's date range
+        now = datetime.now(LOCAL_TZ)
+        start_of_week = now - timedelta(days=now.weekday())  # Monday is 0
+        start_of_week = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
+        
+        # Find matching free times for each day
+        matching_schedule = []
+        
+        for day_offset in range(days_to_check):
+            # Get the date for this day
+            check_date = start_of_week + timedelta(days=day_offset)
+            day_name = check_date.strftime('%A')  # Day of week as string
+            
+            # Filter events for this day from both schedules
+            events1 = []
+            if day_name in schedule1["schedule"]:
+                events1 = schedule1["schedule"][day_name]
+            
+            events2 = []
+            if day_name in schedule2["schedule"]:
+                events2 = schedule2["schedule"][day_name]
+            
+            # Create time slots for the day
+            day_schedule = create_day_schedule(check_date)
+            
+            # Mark busy slots for both people
+            schedule1_day = mark_busy_slots(day_schedule, events1)
+            schedule2_day = mark_busy_slots(day_schedule, events2)
+            
+            # Find common free times
+            common_free_slots = find_common_free_times(schedule1_day, schedule2_day)
+            
+            # Merge consecutive slots
+            merged_slots = merge_consecutive_slots(common_free_slots)
+            
+            # Format results for this day
+            free_times = []
+            for slot in merged_slots:
+                duration_minutes = int((slot['end'] - slot['start']).total_seconds() / 60)
+                if duration_minutes >= TIME_SLOT_INTERVAL:  # Only include slots that are at least the interval length
+                    free_times.append({
+                        'start_time': format_time(slot['start']),
+                        'end_time': format_time(slot['end']),
+                        'duration_minutes': duration_minutes,
+                        'duration_str': format_duration(duration_minutes)
+                    })
+            
+            # Only add days with free time slots
+            if free_times:
+                matching_schedule.append({
+                    'date': check_date.strftime('%A, %B %d'),
+                    'day': day_name,
+                    'free_times': free_times
+                })
+        
+        # Prepare the result
+        result = {
+            "current_term": term_info["name"] if term_info else None,
+            "current_week": week_number,
+            "week_label": week_label,
+            "matching_schedule": matching_schedule
+        }
+        
+        return result
+        
+    except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        return {
+            "error": f"Error finding matching free times: {str(e)}\n{error_details}"
+        }
+
+# --- End Schedule Matching Functions ---
+
 @app.route('/')
 def index():
     """Serve the main page directly"""
@@ -650,6 +894,23 @@ def index():
             color: #7f8c8d;
             font-style: italic;
         }
+        .nav-links {
+            margin-top: 30px; 
+            text-align: center;
+        }
+        .nav-link {
+            display: inline-block; 
+            padding: 12px 24px; 
+            background-color: #3498db; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 4px; 
+            font-weight: bold; 
+            transition: background-color 0.3s;
+        }
+        .nav-link:hover {
+            background-color: #2980b9;
+        }
     </style>
 </head>
 <body>
@@ -671,6 +932,13 @@ def index():
         <div id="error" class="error"></div>
         
         <div id="schedule-container"></div>
+        
+        <div class="nav-links">
+            <a href="/match" class="nav-link">Try Schedule Matching Feature</a>
+            <p style="margin-top: 10px; color: #7f8c8d;">
+                Find common free times between two schedules
+            </p>
+        </div>
     </div>
 
     <script>
@@ -829,6 +1097,293 @@ def parse():
     weekly_schedule = parse_ics_data(ics_data)
     
     return jsonify(weekly_schedule)
+
+@app.route('/match')
+def match_form():
+    """Serve the match form page"""
+    return '''
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNSW Schedule Matcher</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        form {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        input[type="text"] {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            width: 100%;
+        }
+        .form-tip {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        button {
+            padding: 15px 24px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            align-self: center;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .loading {
+            display: none;
+            margin: 20px 0;
+            text-align: center;
+            color: #7f8c8d;
+        }
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #fdf0f0;
+            border-left: 5px solid #e74c3c;
+            border-radius: 4px;
+            display: none;
+        }
+        .instructions {
+            background-color: #f5f9ff;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #3498db;
+        }
+        .instructions ol {
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .nav-link {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 0 10px;
+            color: #3498db;
+            text-decoration: none;
+            border: 1px solid #3498db;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        .nav-link:hover {
+            background-color: #3498db;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>UNSW Schedule Matcher</h1>
+        <p class="subtitle">Find common free times between two UNSW class schedules</p>
+        
+        <div class="instructions">
+            <h3>How to Get Your WebCal URL</h3>
+            <ol>
+                <li>Go to <a href="https://my.unsw.edu.au/" target="_blank">myUNSW</a></li>
+                <li>Navigate to My Student Profile → My Timetable</li>
+                <li>Click on "Subscribe to timetable" and copy the WebCal URL</li>
+            </ol>
+        </div>
+        
+        <form id="match-form">
+            <div class="form-group">
+                <label for="webcal-url1">Person 1 WebCal URL:</label>
+                <input type="text" id="webcal-url1" placeholder="webcal://my.unsw.edu.au/cal/pttd/..." required>
+                <div class="form-tip">Example: webcal://my.unsw.edu.au/cal/pttd/Kmmj3w7Y2Q.ics</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="webcal-url2">Person 2 WebCal URL:</label>
+                <input type="text" id="webcal-url2" placeholder="webcal://my.unsw.edu.au/cal/pttd/..." required>
+                <div class="form-tip">Example: webcal://my.unsw.edu.au/cal/pttd/Lnnk4x8Z3R.ics</div>
+            </div>
+            
+            <button type="submit">Find Common Free Times</button>
+        </form>
+        
+        <div id="loading" class="loading">Finding common free times...</div>
+        
+        <div id="error" class="error"></div>
+        
+        <div id="results-container"></div>
+        
+        <div class="nav-links">
+            <a href="/" class="nav-link">Back to Class Schedule</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('match-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const url1 = document.getElementById('webcal-url1').value;
+            const url2 = document.getElementById('webcal-url2').value;
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const resultsContainer = document.getElementById('results-container');
+            
+            // Check if URLs are provided
+            if (!url1 || !url2) {
+                error.style.display = 'block';
+                error.textContent = 'Please provide both WebCal URLs.';
+                return;
+            }
+            
+            // Clear previous results
+            error.style.display = 'none';
+            error.textContent = '';
+            resultsContainer.innerHTML = '';
+            
+            // Show loading
+            loading.style.display = 'block';
+            
+            // Send request
+            fetch('/match-schedules', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'url1=' + encodeURIComponent(url1) + '&url2=' + encodeURIComponent(url2)
+            })
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                
+                if (data.error) {
+                    error.style.display = 'block';
+                    error.textContent = data.error;
+                    return;
+                }
+                
+                // Build the results HTML
+                let resultsHTML = `
+                    <div style="margin-top: 30px;">
+                        <h2 style="text-align: center; color: #3498db; margin-bottom: 5px;">Matching Free Times</h2>
+                        <p style="text-align: center; color: #7f8c8d; margin-bottom: 20px;">
+                            ${data.current_term || ''} - ${data.week_label || ''}
+                        </p>
+                `;
+                
+                if (data.matching_schedule && data.matching_schedule.length > 0) {
+                    data.matching_schedule.forEach(day => {
+                        resultsHTML += `
+                            <div style="margin-bottom: 25px; border-left: 4px solid #3498db; background-color: white; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden;">
+                                <div style="background-color: #3498db; color: white; padding: 10px 20px; font-size: 18px; font-weight: bold;">
+                                    ${day.date}
+                                </div>
+                                <div style="padding: 0;">
+                        `;
+                        
+                        day.free_times.forEach(slot => {
+                            resultsHTML += `
+                                <div style="padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                                    <div>
+                                        <div style="font-weight: bold; color: #e67e22;">${slot.start_time} - ${slot.end_time}</div>
+                                    </div>
+                                    <div style="color: #7f8c8d;">${slot.duration_str}</div>
+                                </div>
+                            `;
+                        });
+                        
+                        resultsHTML += `
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    resultsHTML += `
+                        <div style="padding: 20px; text-align: center; color: #7f8c8d; font-style: italic;">
+                            No common free times found for the current week.
+                        </div>
+                    `;
+                }
+                
+                resultsHTML += `</div>`;
+                
+                // Display results
+                resultsContainer.innerHTML = resultsHTML;
+            })
+            .catch(err => {
+                loading.style.display = 'none';
+                error.style.display = 'block';
+                error.textContent = 'Error: ' + err.message;
+            });
+        });
+    </script>
+</body>
+</html>
+    '''
+
+@app.route('/match-schedules', methods=['POST'])
+def match_schedules():
+    """Match schedules between two WebCal URLs"""
+    webcal_url1 = request.form.get('url1', '')
+    webcal_url2 = request.form.get('url2', '')
+    
+    if not webcal_url1 or not webcal_url2:
+        return jsonify({"error": "Both WebCal URLs are required"})
+    
+    matching_free_times = get_matching_free_times(webcal_url1, webcal_url2)
+    
+    return jsonify(matching_free_times)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
