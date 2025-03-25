@@ -10,6 +10,7 @@ dependencies = [
     "pyhtml-enhanced>=2.2.2",
     "pytz>=2025.2",
     "recurring-ical-events>=3.6.0",
+    "requests>=2.32.3",
 ]
 
 [dependency-groups]
