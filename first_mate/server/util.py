@@ -6,6 +6,7 @@ Utility code
 
 from hashlib import sha256
 from itertools import chain, repeat
+import random
 
 import pyhtml as p
 
@@ -157,7 +158,13 @@ def profile_image(zid: str, username: str) -> p.img:
     )
 
 
-def profile_banner_html(zid: str, *, matched: bool, link: bool = False) -> p.div:
+def profile_banner_html(
+    zid: str,
+    *,
+    matched: bool = False,
+    link: bool = False,
+    is_me: bool = False,
+) -> p.div:
     """Generate a banner for a user's profile
 
     Parameters
@@ -196,10 +203,24 @@ def profile_banner_html(zid: str, *, matched: bool, link: bool = False) -> p.div
         p.a(href=f"/profile/{zid}")(display_name) if link else p.span(display_name)
     )
 
+    if is_me:
+        its_you_text = [
+            p.p(
+                p.i(
+                    "It's you!"
+                    if random.randint(0, 9)
+                    else "Despite everything, it's still you."
+                )
+            )
+        ]
+    else:
+        its_you_text = []
+
     return p.div(_class="profile-banner")(
         profile_image(zid, user_to_view["display_name"]),
         p.div(_class="profile-banner-inner")(
             p.h2(name_html),
+            its_you_text,
             public_profile_text,
             private_profile_text,
         ),

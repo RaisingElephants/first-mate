@@ -27,8 +27,7 @@ def profile_root():
     user = get_user()
     if user is None:
         return redirect("/auth/login")
-    # /profile/{zid}
-    return redirect(user["zid"])
+    return redirect(f"/profile/{user['zid']}")
 
 
 @profile.get("/<zid>")
@@ -45,10 +44,11 @@ def profile_page(zid: str):
         ), 404
 
     me = get_user()
+    is_me = me is not None and zid == me["zid"]
 
     # We are that user
     # TODO: OR if we have matched with the user
-    matched = me is not None and zid == me["zid"]
+    matched = is_me
 
     # Give edit option if it's us
     if me and zid == me["zid"]:
@@ -56,7 +56,7 @@ def profile_page(zid: str):
     else:
         edit_option = []
 
-    banner_html = profile_banner_html(zid, matched=matched)
+    banner_html = profile_banner_html(zid, matched=matched, is_me=is_me)
 
     return str(
         p.html(
