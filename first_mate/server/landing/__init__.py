@@ -74,9 +74,9 @@ def generate_hero(logged_in: bool) -> p.section:
     return p.section(_class="hero-section")(
         p.div(_class="hero-grid")(
             p.div(_class="hero-content")(
-                p.h1(_class="hero-title")("Find Friends on Campus"),
+                p.h1(_class="hero-title")("Find your crowd"),
                 p.p(_class="hero-description")(
-                    "Connect with students who share your interests, classes, and hangout spots.",
+                    "FirstMate helps you make friends that work with your schedule",
                 ),
                 p.div(_class="hero-buttons")(
                     (

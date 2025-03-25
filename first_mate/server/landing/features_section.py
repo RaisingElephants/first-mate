@@ -10,7 +10,7 @@ def generate_features() -> p.section:
                     "Everything you need to build connections"
                 ),
                 p.p(_class="section-description")(
-                    "Our platform makes it easy to find and connect with other students on your campus."
+                    "Make friends with your peers on-campus at UNSW"
                 ),
             ),
             p.div(_class="features-grid")(
@@ -22,9 +22,9 @@ def generate_features() -> p.section:
                             _class="feature-icon",
                         ),
                     ),
-                    p.h3(_class="feature-title")("Location-Based"),
+                    p.h3(_class="feature-title")("Timetable-Based"),
                     p.p(_class="feature-description")(
-                        "Find students nearby in your dorm, library, or favorite campus spots.",
+                        "Find friends who are on-campus at the same time as you. Just upload your calendar and we'll handle the rest!",
                     ),
                 ),
                 p.div(_class="feature-card")(
@@ -37,7 +37,7 @@ def generate_features() -> p.section:
                     ),
                     p.h3(_class="feature-title")("Interest Matching"),
                     p.p(_class="feature-description")(
-                        "Connect with students who share your hobbies, major, or extracurricular interests.",
+                        "Explore profiles to find people in your niche",
                     ),
                 ),
                 p.div(_class="feature-card")(
@@ -48,9 +48,9 @@ def generate_features() -> p.section:
                             _class="feature-icon",
                         ),
                     ),
-                    p.h3(_class="feature-title")("Safe Messaging"),
+                    p.h3(_class="feature-title")("Privacy Comes First"),
                     p.p(_class="feature-description")(
-                        "Chat securely with verified students from your campus.",
+                        "Your calendar is only visible to you. Control what is shown to your matches, and everyone else.",
                     ),
                 ),
             ),
