@@ -62,7 +62,7 @@ def match_to_html(match: MatchInfo) -> p.div:
         p.p(
             f"{timing} {match['class_description']}",
             p.br(),
-            f"At {time_str}",
+            f"On {time_str}",
         )
     )
 
