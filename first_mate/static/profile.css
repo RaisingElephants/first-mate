@@ -3,3 +3,15 @@ profile.css
 
 CSS only linked on profile pages.
 */
+
+main {
+    display: flex;
+    flex-direction: column;
+    margin: 0 3rem;
+}
+
+.profile-its-you {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}

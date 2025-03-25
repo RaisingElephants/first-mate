@@ -250,7 +250,10 @@ def profile_banner_html(
 
     if its_you:
         its_you_text = [
-            p.p(
+            p.div(_class="profile-its-you")(
+                p.a(href=f"/profile/{id}/edit", _class="btn btn-primary")(
+                    "Edit profile"
+                ),
                 p.b(
                     p.i(
                         "It's you!"

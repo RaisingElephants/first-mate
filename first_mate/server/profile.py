@@ -114,7 +114,8 @@ def profile_page(id: int):
 
     # Give edit option if it's us
     if its_me:
-        edit_option = [p.a(href=f"/profile/{id}/edit", _class="btn btn-primary")("Edit profile")]
+        edit_option = [
+        ]
 
         # List all matches with us
         matches = [
@@ -181,10 +182,12 @@ def profile_page(id: int):
             ),
             p.body(
                 navbar(True),
-                banner_html,
-                edit_option,
-                matches_html,
-                calendar_html,
+                p.main(
+                    banner_html,
+                    edit_option,
+                    matches_html,
+                    calendar_html,
+                ),
             ),
         )
     )
@@ -221,8 +224,15 @@ def profile_edit_page(id: int):
                     # Main profile edit
                     # Submit
                     p.div(_class="profile-edit-actions")(
-                        p.input(type="submit", value="Save", name="save", _class="btn btn-primary"),
-                        p.input(type="submit", value="Cancel", _class="btn btn-outline"),
+                        p.input(
+                            type="submit",
+                            value="Save",
+                            name="save",
+                            _class="btn btn-primary",
+                        ),
+                        p.input(
+                            type="submit", value="Cancel", _class="btn btn-outline"
+                        ),
                     ),
                     # Name
                     p.label(for_="edit-name")(p.p("Display name")),
@@ -264,7 +274,9 @@ def profile_edit_page(id: int):
                         placeholder="webcal://example.com/calendar.ics",
                         required=True,
                     ),
-                    p.input(type="submit", value="Update calendar", _class="btn btn-primary"),
+                    p.input(
+                        type="submit", value="Update calendar", _class="btn btn-primary"
+                    ),
                 ),
             ),
         )
