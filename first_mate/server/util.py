@@ -4,6 +4,8 @@ server/util.py
 Utility code
 """
 
+from itertools import chain, repeat
+
 import pyhtml as p
 
 
@@ -68,7 +70,7 @@ def navbar(logged_in: bool) -> p.nav:
 
     # TODO: Make this only enabled in debug mode
     debug_options = [
-        p.form(action="debug/clear",class_="debug_button")(
+        p.form(action="debug/clear", class_="debug_button")(
             p.input(type="submit", value="Reset server"),
         )
     ]
@@ -94,4 +96,33 @@ def error_page(
                 p.p(text),
             ),
         ),
+    )
+
+
+def multiline_str_to_html(text: str) -> p.div:
+    """Convert a multi-line string.
+
+    Required since HTML ignores whitespace, so we need to convert each '\\n' to
+    a `<br>` tag.
+
+    Parameters
+    ----------
+    text : str
+        text to convert to HTML
+
+    Returns
+    -------
+    p.div
+        HTML of multi-line string
+    """
+    return p.div(
+        # https://stackoverflow.com/a/58718461/6335363
+        list(
+            chain.from_iterable(
+                zip(
+                    text.splitlines(),
+                    repeat(p.br()),
+                )
+            )
+        )
     )
