@@ -1,6 +1,6 @@
-# first-mate
+# FirstMate
 
-Find yourself some friends on campus at UNSW
+Find your crowd - FirstMate helps you make friends that work with your schedule.
 
 ## Developing
 
