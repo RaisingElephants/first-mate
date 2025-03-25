@@ -63,6 +63,7 @@ def profile_page(zid: str):
             p.head(
                 p.title(f"Profile - {user_to_view['display_name']}"),
                 p.link(href="/static/root.css", rel="stylesheet"),
+                p.link(href="/static/profile.css", rel="stylesheet"),
             ),
             p.body(
                 navbar(True),
@@ -93,6 +94,7 @@ def profile_edit_page(zid: str):
             p.head(
                 p.title(f"Profile - {user['display_name']}"),
                 p.link(href="/static/root.css", rel="stylesheet"),
+                p.link(href="/static/profile.css", rel="stylesheet"),
             ),
             p.body(
                 navbar(True),
