@@ -1,11 +1,11 @@
 /* Base styles */
 :root {
-    --primary: #fca33b;;
+    --primary: #3b82f6;
     --primary-foreground: #ffffff;
-    --background: #ddcfbe;;
+    --background: #ffffff;
     --foreground: #0f172a;
     --muted: #f1f5f9;
-    --muted-foreground: #f8ce9d;
+    --muted-foreground: #64748b;
     --border: #e2e8f0;
     --radius: 3.5rem;
 }
