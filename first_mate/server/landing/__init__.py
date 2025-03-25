@@ -32,6 +32,7 @@ def generate_head() -> head:
         meta(charset="UTF-8"),
         meta(name="viewport", content="width=device-width, initial-scale=1.0"),
         title("FirstMate - Find Friends on Campus"),
+        link(rel="stylesheet", href="/static/root.css"),
         link(rel="stylesheet", href="/static/landing.css"),
     )
 
