@@ -180,6 +180,14 @@ a:hover {
     margin-left: 0.25rem;
 }
 
+/* Week switcher */
+.time-picker {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+}
+
+
 
 /* Profile banner styles */
 .profile-banner {

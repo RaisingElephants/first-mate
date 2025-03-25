@@ -104,9 +104,17 @@ def profile_page(id: int):
     liked_you = me["id"] in them["likes"]
     you_liked = id in me["likes"]
 
+    time_picker = p.div(_class="time-picker")(
+        p.a(href=f"?offset={week_offset - 1}", _class="btn btn-outline")(
+            "Previous week"
+        ),
+        week_str,
+        p.a(href=f"?offset={week_offset + 1}", _class="btn btn-outline")("Next week"),
+    )
+
     # Give edit option if it's us
     if its_me:
-        edit_option = [p.a(href=f"/profile/{id}/edit")("Edit profile")]
+        edit_option = [p.a(href=f"/profile/{id}/edit", _class="btn btn-primary")("Edit profile")]
 
         # List all matches with us
         matches = [
@@ -135,6 +143,7 @@ def profile_page(id: int):
         calendar_html = [
             p.h2("Your calendar"),
             p.p("Your calendar is not shown to other users"),
+            time_picker,
             *(
                 [calendar_event_to_html(event) for event in calendar_events]
                 if len(calendar_events)
@@ -148,6 +157,7 @@ def profile_page(id: int):
         schedule_matches = get_matching_times(me, them, start, end)
         calendar_html = [
             p.h2("Your shared events"),
+            time_picker,
             (
                 schedule_matches_html(schedule_matches)
                 if len(schedule_matches)
@@ -162,9 +172,6 @@ def profile_page(id: int):
         you_liked=you_liked,
     )
 
-    prev_week = p.a(href=f"?offset={week_offset - 1}")("Previous week")
-    next_week = p.a(href=f"?offset={week_offset + 1}")("Next week")
-
     return str(
         p.html(
             p.head(
@@ -177,11 +184,6 @@ def profile_page(id: int):
                 banner_html,
                 edit_option,
                 matches_html,
-                p.div(
-                    prev_week,
-                    week_str,
-                    next_week,
-                ),
                 calendar_html,
             ),
         )
@@ -219,8 +221,8 @@ def profile_edit_page(id: int):
                     # Main profile edit
                     # Submit
                     p.div(_class="profile-edit-actions")(
-                        p.input(type="submit", value="Save", name="save"),
-                        p.input(type="submit", value="Cancel"),
+                        p.input(type="submit", value="Save", name="save", _class="btn btn-primary"),
+                        p.input(type="submit", value="Cancel", _class="btn btn-outline"),
                     ),
                     # Name
                     p.label(for_="edit-name")(p.p("Display name")),
@@ -262,7 +264,7 @@ def profile_edit_page(id: int):
                         placeholder="webcal://example.com/calendar.ics",
                         required=True,
                     ),
-                    p.input(type="submit", value="Update calendar"),
+                    p.input(type="submit", value="Update calendar", _class="btn btn-primary"),
                 ),
             ),
         )
