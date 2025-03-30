@@ -22,7 +22,7 @@ FIRSTMATE_DATA="."
 ### Install dependencies
 
 ```sh
-uv install
+uv sync
 ```
 
 ### Run type checking
