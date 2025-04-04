@@ -84,9 +84,7 @@ def register_page():
                                     id="ical",
                                     placeholder="webcal://my.unsw.edu.au/cal/pttd/ABCDEFGHIJ.ics",
                                     value=(
-                                        "webcal://localhost:8000/sid.ics"
-                                        if dev()
-                                        else ""
+                                        "http://localhost:8000/sid.ics" if dev() else ""
                                     ),
                                     required=True,
                                 ),
