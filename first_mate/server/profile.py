@@ -40,7 +40,7 @@ def profile_root():
 
 
 def format_time(t: int) -> str:
-    return datetime.fromtimestamp(t).strftime("%-I:%M%p")
+    return datetime.fromtimestamp(t).astimezone(LOCAL_TZ).strftime("%-I:%M%p")
 
 
 def calendar_event_to_html(ev: ClassEvent) -> p.div:
