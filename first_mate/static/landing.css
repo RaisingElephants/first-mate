@@ -246,57 +246,6 @@
     margin-top: 1.5rem;
 }
 
-/* Footer */
-.site-footer {
-    width: 100%;
-    border-top: 1px solid var(--border);
-    padding: 1.5rem 0;
-}
-
-.footer-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-}
-
-.footer-logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.logo-icon-small {
-    height: 1.25rem;
-    width: 1.25rem;
-    color: var(--primary);
-}
-
-.logo-text-small {
-    font-weight: 600;
-}
-
-.copyright {
-    text-align: center;
-    font-size: 0.875rem;
-    color: var(--muted-foreground);
-}
-
-.footer-links {
-    display: flex;
-    gap: 1rem;
-}
-
-.footer-link {
-    font-size: 0.875rem;
-    color: var(--muted-foreground);
-    transition: color 0.2s;
-}
-
-.footer-link:hover {
-    color: var(--primary);
-}
-
 /* Responsive */
 @media (min-width: 768px) {
     .hero-section {

@@ -20,6 +20,7 @@ from first_mate.logic.user import get_user_by_id
 from first_mate.server.session import get_user, is_user_logged_in
 from first_mate.server.util import (
     error_page,
+    generate_footer,
     generate_head,
     navbar,
     profile_banner_html,
@@ -196,6 +197,7 @@ def profile_page(id: int):
                     matches_html,
                     calendar_html,
                 ),
+                generate_footer(),
             ),
         )
     )
@@ -293,6 +295,7 @@ def profile_edit_page(id: int):
                         ),
                     ),
                 ),
+                generate_footer(),
             ),
         )
     )

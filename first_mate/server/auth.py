@@ -14,7 +14,7 @@ from first_mate.server.session import (
     set_session,
 )
 
-from .util import error_page, generate_head, list_to_checkboxes, navbar
+from .util import error_page, generate_footer, generate_head, list_to_checkboxes, navbar
 from ..consts import DEGREES_LIST, dev
 from first_mate.logic.user import login_user, logout_user, register_user
 
@@ -99,6 +99,7 @@ def register_page():
                         ),
                     ),
                 ),
+                generate_footer(),
             ),
         )
     )
@@ -172,6 +173,7 @@ def login():
                         ),
                     ),
                 ),
+                generate_footer(),
             ),
         )
     )

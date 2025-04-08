@@ -14,6 +14,7 @@ from first_mate.logic.user import User, get_user_by_id
 from first_mate.server.session import get_user
 from first_mate.server.util import (
     error_page,
+    generate_footer,
     generate_head,
     navbar,
     profile_banner_html,
@@ -78,9 +79,12 @@ def show_potential_mates():
             generate_head("Mates", ["/static/profile.css"]),
             p.body(
                 navbar(True),
-                p.h1("Your mate recommendations"),
-                time_picker,
-                mates_html,
+                p.main(
+                    p.h1("Your mate recommendations"),
+                    time_picker,
+                    mates_html,
+                ),
+                generate_footer(),
             ),
         )
     )
