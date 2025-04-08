@@ -1,6 +1,6 @@
 /* Base styles */
 :root {
-    --primary: #3b82f6;
+    --primary: #fca33b;
     --primary-foreground: #ffffff;
     --background: #ffffff;
     --foreground: #0f172a;
@@ -8,6 +8,11 @@
     --muted-foreground: #64748b;
     --border: #e2e8f0;
     --radius: 3.5rem;
+    --brand-orange: #fca33b;
+    --brand-red: #f55e40;
+    --brand-blue: #6991bd;
+    --brand-beige: #ddcfbe;
+    --brand-brown: #302520;
 }
 
 * {
@@ -139,8 +144,29 @@ a:hover {
     font-size: 0.875rem;
     font-weight: 500;
     padding: 0.5rem 1rem;
-    transition: all 0.2s;
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+a.btn:hover {
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: var(--brand-orange);
+    border-color: var(--brand-orange);
+    box-shadow: 0 4px 6px rgba(252, 163, 59, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 14px rgba(252, 163, 59, 0.2);
+}
+
+.btn:active {
+    transform: translateY(1px);
 }
 
 .btn-lg {
@@ -278,5 +304,61 @@ a:hover {
     .footer-content {
         flex-direction: row;
         justify-content: space-between;
+    }
+}
+
+/* Footer link animations */
+.footer-link {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.footer-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--brand-orange);
+    transition: width 0.3s ease;
+}
+
+.footer-link:hover {
+    color: var(--brand-orange);
+    text-decoration: none;
+}
+
+.footer-link:hover::after {
+    width: 100%;
+}
+
+/* Logo animation */
+.footer-logo {
+    transition: all 0.3s ease;
+}
+
+.logo-icon-small {
+    transition: all 0.3s ease;
+}
+
+.footer-logo:hover .logo-icon-small {
+    transform: rotate(10deg);
+}
+
+/* Fade-in animation for elements */
+.fade-in {
+    animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
