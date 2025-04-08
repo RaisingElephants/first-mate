@@ -20,6 +20,7 @@ from first_mate.logic.user import get_user_by_id
 from first_mate.server.session import get_user, is_user_logged_in
 from first_mate.server.util import (
     error_page,
+    generate_head,
     navbar,
     profile_banner_html,
     week_offset_to_str,
@@ -186,11 +187,7 @@ def profile_page(id: int):
 
     return str(
         p.html(
-            p.head(
-                p.title(f"Profile - {them['display_name']}"),
-                p.link(href="/static/root.css", rel="stylesheet"),
-                p.link(href="/static/profile.css", rel="stylesheet"),
-            ),
+            generate_head(f"Profile - {them['display_name']}", ["/static/profile.css"]),
             p.body(
                 navbar(True),
                 p.main(
@@ -223,11 +220,7 @@ def profile_edit_page(id: int):
 
     return str(
         p.html(
-            p.head(
-                p.title(f"Profile - {user['display_name']}"),
-                p.link(href="/static/root.css", rel="stylesheet"),
-                p.link(href="/static/profile.css", rel="stylesheet"),
-            ),
+            generate_head(f"Profile - {user['display_name']}", ["/static/profile.css"]),
             p.body(
                 navbar(True),
                 p.main(

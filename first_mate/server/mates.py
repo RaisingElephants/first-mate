@@ -14,6 +14,7 @@ from first_mate.logic.user import User, get_user_by_id
 from first_mate.server.session import get_user
 from first_mate.server.util import (
     error_page,
+    generate_head,
     navbar,
     profile_banner_html,
     week_offset_to_str,
@@ -74,10 +75,7 @@ def show_potential_mates():
 
     return str(
         p.html(
-            p.head(
-                p.title("Calendar view"),
-                p.link(href="/static/root.css", rel="stylesheet"),
-            ),
+            generate_head("Mates", ["/static/profile.css"]),
             p.body(
                 navbar(True),
                 p.h1("Your mate recommendations"),

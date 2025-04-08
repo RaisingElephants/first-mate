@@ -14,7 +14,7 @@ from first_mate.server.session import (
     set_session,
 )
 
-from .util import error_page, list_to_checkboxes, navbar
+from .util import error_page, generate_head, list_to_checkboxes, navbar
 from ..consts import DEGREES_LIST, dev
 from first_mate.logic.user import login_user, logout_user, register_user
 
@@ -28,11 +28,7 @@ def register_page():
         return redirect("/")
     return str(
         p.html(
-            p.head(
-                p.title("Register - First Mate"),
-                p.link(href="/static/root.css", rel="stylesheet"),
-                p.link(href="/static/auth.css", rel="stylesheet"),
-            ),
+            generate_head("Login", ["/static/auth.css"]),
             p.body(
                 navbar(False),
                 p.main(
@@ -140,11 +136,7 @@ def login():
         return redirect("/")
     return str(
         p.html(
-            p.head(
-                p.title("Login - FirstMate"),
-                p.link(href="/static/root.css", rel="stylesheet"),
-                p.link(href="/static/auth.css", rel="stylesheet"),
-            ),
+            generate_head("Login", ["/static/auth.css"]),
             p.body(
                 navbar(False),
                 p.main(
