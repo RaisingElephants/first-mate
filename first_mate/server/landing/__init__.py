@@ -1,4 +1,3 @@
-from datetime import datetime
 import pyhtml as p
 
 from first_mate.server.landing.bg_animation import generate_bg_animation
@@ -7,19 +6,18 @@ from first_mate.server.landing.how_it_works_testimonials_section import (
     generate_how_it_works,
     generate_testimonials,
 )
-from first_mate.server.util import navbar
+from first_mate.server.util import generate_footer, generate_head, navbar
 
 
-def generate_head() -> p.head:
-    return p.head(
-        p.meta(charset="UTF-8"),
-        p.meta(name="viewport", content="width=device-width, initial-scale=1.0"),
-        p.title("FirstMate - Find Friends on Campus"),
-        p.link(rel="stylesheet", href="/static/root.css"),
-        p.link(rel="stylesheet", href="/static/landing.css"),
-        p.link(rel="stylesheet", href="/static/animation.css"),
-
-    )
+# def generate_head() -> p.head:
+#     return p.head(
+#         p.meta(charset="UTF-8"),
+#         p.meta(name="viewport", content="width=device-width, initial-scale=1.0"),
+#         p.title("FirstMate - Find Friends on Campus"),
+#         p.link(rel="stylesheet", href="/static/root.css"),
+#         p.link(rel="stylesheet", href="/static/landing.css"),
+#         p.link(rel="stylesheet", href="/static/animation.css"),
+#     )
 
 
 def generate_cta(logged_in: bool) -> p.section:
@@ -40,33 +38,6 @@ def generate_cta(logged_in: bool) -> p.section:
                     else p.a(href="/mates", _class="btn btn-primary btn-lg")(
                         "Find your mates",
                     )
-                ),
-            ),
-        ),
-    )
-
-
-def generate_footer() -> p.footer:
-    return p.footer(_class="site-footer")(
-        p.div(_class="container")(
-            p.div(_class="footer-content")(
-                p.a(href="/", title="Return to homepage")(
-                    p.div(_class="footer-logo")(
-                        p.img(
-                            src="/static/firstmate-logo.png",
-                            alt="FirstMate logo",
-                            _class="logo-icon-small",
-                        ),
-                        p.span(_class="logo-text-small")("FirstMate"),
-                    ),
-                ),
-                p.p(_class="copyright")(
-                    f"© {datetime.now().year} FirstMate. All rights reserved.",
-                ),
-                p.div(_class="footer-links")(
-                    p.a(href="/terms", _class="footer-link")("Terms"),
-                    p.a(href="/privacy", _class="footer-link")("Privacy"),
-                    p.a(href="/contact", _class="footer-link")("Contact"),
                 ),
             ),
         ),
@@ -115,7 +86,6 @@ def generate_body(logged_in: bool) -> p.body:
     return p.body(
         p.canvas(id="animation-canvas", _class="background-animation"),
         generate_bg_animation(),
-
         p.div(_class="flex min-h-screen flex-col")(
             navbar(logged_in),
             p.main(_class="flex-1")(
@@ -126,18 +96,17 @@ def generate_body(logged_in: bool) -> p.body:
                 generate_cta(logged_in),
             ),
             generate_footer(),
-        )
+        ),
     )
 
 
 def render_page(logged_in: bool) -> str:
     return str(
         p.html(
-            generate_head(),
+            generate_head(
+                "Find Friends on Campus",
+                ["/static/landing.css", "/static/animation.css"],
+            ),
             generate_body(logged_in),
         )
     )
-
-
-# if __name__ == "__main__":
-#     print(render_page())

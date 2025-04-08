@@ -4,6 +4,7 @@ server/util.py
 Utility code
 """
 
+from datetime import datetime
 from hashlib import sha256
 from itertools import chain, repeat
 import random
@@ -91,6 +92,47 @@ def navbar(logged_in: bool) -> p.header:
                 _class="main-nav",
             )
         )
+    )
+
+
+def generate_head(
+    title: str,
+    extra_css: list[str],
+) -> p.head:
+    return p.head(
+        p.meta(charset="UTF-8"),
+        p.meta(name="viewport", content="width=device-width, initial-scale=1.0"),
+        p.title(f"FirstMate - {title}"),
+        p.link(rel="stylesheet", href="/static/root.css"),
+        p.link(rel="icon", href="/static/firstmate-logo.png"),
+        [p.link(rel="stylesheet", href=href) for href in extra_css],
+    )
+
+
+def generate_footer() -> p.footer:
+    return p.footer(_class="site-footer")(
+        p.div(_class="container")(
+            p.div(_class="footer-content")(
+                p.a(href="/", title="Return to homepage")(
+                    p.div(_class="footer-logo")(
+                        p.img(
+                            src="/static/firstmate-logo.png",
+                            alt="FirstMate logo",
+                            _class="logo-icon-small",
+                        ),
+                        p.span(_class="logo-text-small")("FirstMate"),
+                    ),
+                ),
+                p.p(_class="copyright")(
+                    f"© {datetime.now().year} FirstMate. All rights reserved.",
+                ),
+                p.div(_class="footer-links")(
+                    p.a(href="/terms", _class="footer-link")("Terms"),
+                    p.a(href="/privacy", _class="footer-link")("Privacy"),
+                    p.a(href="/contact", _class="footer-link")("Contact"),
+                ),
+            ),
+        ),
     )
 
 
