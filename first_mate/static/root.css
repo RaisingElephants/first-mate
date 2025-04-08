@@ -346,6 +346,18 @@ a.btn:hover {
     transform: rotate(10deg);
 }
 
+.logo {
+    transition: all 0.3s ease;
+}
+
+.logo-icon {
+    transition: all 0.3s ease;
+}
+
+.logo:hover .logo-icon {
+    transform: rotate(10deg);
+}
+
 /* Fade-in animation for elements */
 .fade-in {
     animation: fadeIn 0.8s ease forwards;
