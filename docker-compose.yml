@@ -1,11 +1,5 @@
-# COMP1010 Deployed Apps
+# FirstMate
 # docker-compose.yml
-#
-# Usage:
-# * Each app is deployed in its own docker container, with the containers being
-#   coordinated by this image.
-# * Start them all by running `docker compose up`
-# * The ports for the desired apps should then be forwarded
 services:
   firstmate:
     build:
